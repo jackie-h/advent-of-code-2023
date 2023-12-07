@@ -6,12 +6,13 @@ def day4(filename):
     with open(filename) as f:
         lines = [line.strip() for line in f.readlines()]
         res = solve(lines)
+        print(res)
     return res
 
 
 def solve(lines):
     res = 0
-    multipiers = [1] * len(lines)
+    multipliers = [1] * len(lines)
     for i,line in enumerate(lines):
         tail = line.split(":")[1]
         winners = tail.split("|")[0].split()
@@ -29,16 +30,18 @@ def solve(lines):
         print(ct)
         print('winners count', ws)
         res = res + ct
-        s = i
-        while s < ws:
-            val = multipiers[s] + 1
-            multipiers[s] = val
+        s = i + 1
+        multiplier = multipliers[i]
+        while s < (i + 1 + ws):
+            val = multipliers[s] + multiplier
+            multipliers[s] = val
             s += 1
-    print(res)
-    return res
+        print('Multipliers', i, multipliers)
+    print('Multipliers', multipliers)
+    return res, sum(multipliers)
 
 
 if __name__ == '__main__':
-    assert day4('day4_test.txt') == 13
+    assert day4('day4_test.txt') == (13,30)
 
-    #assert day4('day4_input.txt') == 24160
+    assert day4('day4_input.txt') == (24160, 5659035)
