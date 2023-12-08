@@ -1,3 +1,4 @@
+import math
 
 
 def day8(filename, part2):
@@ -18,43 +19,63 @@ def solve(lines, part2):
 
     for line in lines:
         if '=' in line:
-            h,t = line.split("=")
+            h, t = line.split("=")
             key = h.strip()
-            l,r = t.split(",")
-            lv = l.replace("(","").strip()
-            rv = r.replace(")","").strip()
-            map[key] = (lv,rv)
+            l, r = t.split(",")
+            lv = l.replace("(", "").strip()
+            rv = r.replace(")", "").strip()
+            map[key] = (lv, rv)
     print(map)
 
     steps = 0
     if not part2:
         key = 'AAA'
         while key != 'ZZZ':
-            key,steps = follow_path(instruction, key, map, steps)
+            key, steps = follow_path(instruction, key, map, steps)
     else:
         # Part 2
-        keys = [k for k in map.keys() if k.endswith('A')]
-        print(keys)
-        more = True
-
-        while more:
-            for s in instruction:
-                steps += 1
-                for i,key in enumerate(keys):
-                    key = follow_step(s, key, map)
-                    keys[i] = key
-
-                print(steps, keys)
-                stop = True
-                for k in keys:
-                    if not k.endswith('Z'):
-                        stop = False
-                        break
-                if stop:
-                    more = False
-                    break
+        # steps = slow_method(instruction, map, steps)
+        steps = 1
+        for start in map.keys():
+            if start.endswith('A'):
+                ss = solve_steps(start,instruction,map)
+                print(ss, steps)
+                steps = math.lcm(steps, ss)
 
     return steps
+
+
+def slow_method(instruction, map, steps):
+    keys = [k for k in map.keys() if k.endswith('A')]
+    print(keys)
+    more = True
+    while more:
+        for s in instruction:
+            steps += 1
+            for i, key in enumerate(keys):
+                key = follow_step(s, key, map)
+                keys[i] = key
+
+            print(steps, keys)
+            stop = True
+            for k in keys:
+                if not k.endswith('Z'):
+                    stop = False
+                    break
+            if stop:
+                more = False
+                break
+    return steps
+
+
+def solve_steps(start, inst, map):
+    pos = start
+    idx = 0
+    while not pos.endswith('Z'):
+        d = inst[idx % len(inst)]
+        pos = follow_step(d,pos,map)
+        idx += 1
+    return idx
 
 
 def follow_path(instruction, key, map, steps):
@@ -63,7 +84,7 @@ def follow_path(instruction, key, map, steps):
         key = follow_step(s, key, map)
         if key == 'ZZZ':
             break
-    return key,steps
+    return key, steps
 
 
 def follow_step(s, key, map):
@@ -76,9 +97,9 @@ def follow_step(s, key, map):
 
 
 if __name__ == '__main__':
-    #assert day8('day8_test1.txt', False) == 2
-    #assert day8('day8_test2.txt', False) == 6
-    #assert day8('day8_test3.txt', True) == 6
+    assert day8('day8_test1.txt', False) == 2
+    assert day8('day8_test2.txt', False) == 6
+    assert day8('day8_test3.txt', True) == 6
 
-    #assert day8('day8_input.txt', False) == 12737
-    assert day8('day8_input.txt', True) == 12737
+    assert day8('day8_input.txt', False) == 12737
+    assert day8('day8_input.txt', True) == 9064949303801
