@@ -108,8 +108,15 @@ def fill(location, grid, height, width, lines):
             fill(('e', r + 1, c), grid, height, width, lines)
         else:
             v = lines[r+1][c]
-            if c < width - 1 and v in ['|', 'J','7'] and lines[r+1][c+1] in ['|','F','L']:
-                fill(('s', r + 1, c), grid, height, width, lines)
+            if c < width - 1 and v in ['|', 'J','7']:
+                a = grid[r+1][c+1]
+                av = lines[r+1][c+1]
+                if a != 'o' and a < 0:
+                    grid[r + 1][c + 1] = 'o'
+                    fill(('n', r + 1, c), grid, height, width, lines)
+                    fill(('n', r + 1, c + 1), grid, height, width, lines)
+                elif av in ['|','F','L']:
+                    fill(('s', r + 1, c), grid, height, width, lines)
     elif d == 'w' and in_bounds(r,c-1,height,width):
         nc = c -1
         v = grid[r][nc]
