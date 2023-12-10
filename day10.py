@@ -1,3 +1,6 @@
+import sys
+
+
 def day10(filename, part2):
     print('Day 10: Pipe Maze')
 
@@ -11,6 +14,8 @@ def day10(filename, part2):
 
 
 def solve(lines, part2):
+    sys.setrecursionlimit(10000)
+
     res = 0
     width = len(lines[0])
     height = len(lines)
@@ -227,3 +232,5 @@ if __name__ == '__main__':
     #assert day10('day10_test3.txt', True) == 4
     assert day10('day10_test4.txt', True) == 8
     assert day10('day10_test5.txt', True) == 10
+
+    assert day10('day10_input.txt', True) == 10
