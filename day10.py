@@ -1,16 +1,16 @@
-def day10(filename):
+def day10(filename, part2):
     print('Day 10: Pipe Maze')
 
     res = 0
     with open(filename) as f:
         lines = [line.strip() for line in f.readlines()]
-        res = solve(lines)
+        res = solve(lines, part2)
         print(res)
 
     return res
 
 
-def solve(lines):
+def solve(lines, part2):
     res = 0
     width = len(lines[0])
     height = len(lines)
@@ -37,7 +37,60 @@ def solve(lines):
     res = follow_path(starts, -1, grid, height, lines, width)
     print('grid', grid)
     print(res)
-    return res
+
+    inside = 0
+    if part2:
+        for x in range(0,height):
+            for y in range(0,width):
+                v = grid[x][y]
+                if v < 0:
+                    if (x == 0 or x == height - 1 or y == 0 or y == width - 1):
+                        grid[x][y] = 'o'
+                    elif x > 0 and grid[x-1][y] == 'o':
+                        grid[x][y] = 'o'
+                        for j in range(y+1,width):
+                            if grid[x][j] != 'o' and grid[x][j] < 0:
+                                grid[x][j] = 'o'
+                            else:
+                                break
+                        for j in reversed(range(0,y)):
+                            if grid[x][j] != 'o' and grid[x][j] < 0:
+                                grid[x][j] = 'o'
+                            else:
+                                break
+
+        for x in reversed(range(0,height)):
+            for y in reversed(range(0,width)):
+                v = grid[x][y]
+                if v != 'o' and v < 0:
+                    if x < height and grid[x+1][y] == 'o':
+                        grid[x][y] = 'o'
+                        for j in range(y+1,width):
+                            if grid[x][j] != 'o' and grid[x][j] < 0:
+                                grid[x][j] = 'o'
+                            else:
+                                break
+                        for j in reversed(range(0,y)):
+                            if grid[x][j] != 'o' and grid[x][j] < 0:
+                                grid[x][j] = 'o'
+                            else:
+                                break
+
+        for x in range(0,height):
+            for y in range(0,width):
+                v = grid[x][y]
+                if v != 'o' and v < 0:
+                    inside += 1
+
+        print('grid', grid)
+        for row in grid:
+            print(*row, sep="\t")
+        #print('\n'.join(' '.join(str(x) for x in row) for row in grid))
+
+    if part2:
+        return inside
+    else:
+        return res
 
 
 def follow_path(paths, count, grid, height, lines, width):
@@ -122,5 +175,6 @@ def in_bounds(r, c, height, width):
 
 
 if __name__ == '__main__':
-    assert day10('day10_test1.txt') == 4
-    assert day10('day10_input.txt') == 6613
+    #assert day10('day10_test1.txt') == 4
+    #assert day10('day10_input.txt') == 6613
+    assert day10('day10_test2.txt', True) == 4
