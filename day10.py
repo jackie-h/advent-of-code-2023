@@ -113,8 +113,8 @@ def fill(location, grid, height, width, lines):
                 av = lines[r+1][c+1]
                 if a != 'o' and a < 0:
                     grid[r + 1][c + 1] = 'o'
-                    fill(('n', r + 1, c), grid, height, width, lines)
-                    fill(('n', r + 1, c + 1), grid, height, width, lines)
+                    fill(('s', r + 1, c), grid, height, width, lines)
+                    fill(('s', r + 1, c + 1), grid, height, width, lines)
                 elif av in ['|','F','L']:
                     fill(('s', r + 1, c), grid, height, width, lines)
     elif d == 'w' and in_bounds(r,c-1,height,width):
@@ -125,6 +125,17 @@ def fill(location, grid, height, width, lines):
             fill(('s', r, nc), grid, height, width, lines)
             fill(('w', r, nc), grid, height, width, lines)
             fill(('n', r, nc), grid, height, width, lines)
+        else:
+            v = lines[r][nc]
+            if r < height - 1 and v in ['-', 'J','L']:
+                a = grid[r+1][nc]
+                av = lines[r+1][nc]
+                if a != 'o' and a < 0:
+                    grid[r+1][nc] = 'o'
+                    fill(('w', r, nc), grid, height, width, lines)
+                    fill(('w', r+1, nc), grid, height, width, lines)
+                elif av in ['-','F','7']:
+                    fill(('w', r, nc), grid, height, width, lines)
     elif d == 'e' and in_bounds(r,c+1,height,width):
         nc = c +1
         v = grid[r][nc]
@@ -133,6 +144,17 @@ def fill(location, grid, height, width, lines):
             fill(('s', r, nc), grid, height, width, lines)
             fill(('e', r, nc), grid, height, width, lines)
             fill(('n', r, nc), grid, height, width, lines)
+        else:
+            v = lines[r][nc]
+            if r < height - 1 and v in ['-', 'J','L']:
+                a = grid[r+1][nc]
+                av = lines[r+1][nc]
+                if a != 'o' and a < 0:
+                    grid[r+1][nc] = 'o'
+                    fill(('e', r, nc), grid, height, width, lines)
+                    fill(('e', r+1, nc), grid, height, width, lines)
+                elif av in ['-','F','7']:
+                    fill(('e', r, nc), grid, height, width, lines)
 
 def find_edge_start(grid, width, height):
     for x in range(0,height):
