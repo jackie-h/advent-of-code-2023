@@ -257,8 +257,8 @@ def in_bounds(r, c, height, width):
 if __name__ == '__main__':
     #assert day10('day10_test1.txt') == 4
     #assert day10('day10_input.txt') == 6613
-    #assert day10('day10_test2.txt', True) == 4
-    #assert day10('day10_test3.txt', True) == 4
+    assert day10('day10_test2.txt', True) == 4
+    assert day10('day10_test3.txt', True) == 4
     assert day10('day10_test4.txt', True) == 8
     assert day10('day10_test5.txt', True) == 10
 
