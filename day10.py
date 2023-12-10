@@ -48,7 +48,10 @@ def solve(lines, part2):
                 fill(('s', x, y), grid, height, width, lines)
             else:
                 fill(('n', x, y), grid, height, width, lines)
-                print('grid', grid)
+            if y == 0:
+                fill(('e', x, y), grid, height, width, lines)
+            else:
+                fill(('w', x, y), grid, height, width, lines)
                 #fill(('e', x, y), grid, height, width)
             edge_start = find_edge_start(grid, width, height)
 
@@ -120,14 +123,14 @@ def fill(location, grid, height, width, lines):
             fill(('n', r, nc), grid, height, width, lines)
 
 def find_edge_start(grid, width, height):
-    for x in range(0,height-1):
+    for x in range(0,height):
         for y in [0, width - 1]:
             v = grid[x][y]
             if v != 'o' and v < 0:
                 grid[x][y] = 'o'
                 return (x, y)
 
-    for y in range(0, width-1):
+    for y in range(0, width):
         for x in [0, height - 1]:
             v = grid[x][y]
             if v != 'o' and v < 0:
@@ -223,3 +226,4 @@ if __name__ == '__main__':
     #assert day10('day10_test2.txt', True) == 4
     #assert day10('day10_test3.txt', True) == 4
     assert day10('day10_test4.txt', True) == 8
+    assert day10('day10_test5.txt', True) == 10
