@@ -40,41 +40,18 @@ def solve(lines, part2):
 
     inside = 0
     if part2:
-        for x in range(0,height):
-            for y in range(0,width):
-                v = grid[x][y]
-                if v < 0:
-                    if (x == 0 or x == height - 1 or y == 0 or y == width - 1):
-                        grid[x][y] = 'o'
-                    elif x > 0 and grid[x-1][y] == 'o':
-                        grid[x][y] = 'o'
-                        for j in range(y+1,width):
-                            if grid[x][j] != 'o' and grid[x][j] < 0:
-                                grid[x][j] = 'o'
-                            else:
-                                break
-                        for j in reversed(range(0,y)):
-                            if grid[x][j] != 'o' and grid[x][j] < 0:
-                                grid[x][j] = 'o'
-                            else:
-                                break
+        edge_start = find_edge_start(grid, width, height)
+        while edge_start is not None:
+            print(edge_start)
+            x,y = edge_start
+            if x == 0:
+                fill(('s', x,y), grid, height, width)
+            else:
+                fill(('n', x, y), grid, height, width)
+                print('grid', grid)
+                #fill(('e', x, y), grid, height, width)
+            edge_start = find_edge_start(grid, width, height)
 
-        for x in reversed(range(0,height)):
-            for y in reversed(range(0,width)):
-                v = grid[x][y]
-                if v != 'o' and v < 0:
-                    if x < height and grid[x+1][y] == 'o':
-                        grid[x][y] = 'o'
-                        for j in range(y+1,width):
-                            if grid[x][j] != 'o' and grid[x][j] < 0:
-                                grid[x][j] = 'o'
-                            else:
-                                break
-                        for j in reversed(range(0,y)):
-                            if grid[x][j] != 'o' and grid[x][j] < 0:
-                                grid[x][j] = 'o'
-                            else:
-                                break
 
         for x in range(0,height):
             for y in range(0,width):
@@ -92,6 +69,49 @@ def solve(lines, part2):
     else:
         return res
 
+
+def fill(location, grid, height, width):
+    d, r, c = location
+
+    if d == 'n' and in_bounds(r-1,c,height,width):
+        v = grid[r-1][c]
+        if v != 'o' and v < 0:
+            grid[r - 1][c] = 'o'
+            fill(('n',r-1,c), grid, height, width)
+            fill(('w', r - 1, c), grid, height, width)
+            fill(('e', r - 1, c), grid, height, width)
+    elif d == 's' and in_bounds(r+1,c,height,width):
+        v = grid[r+1][c]
+        if v != 'o' and v < 0:
+            grid[r+1][c] = 'o'
+            fill(('s',r+1,c), grid, height, width)
+            fill(('w', r+1, c), grid, height, width)
+            fill(('e', r+1, c), grid, height, width)
+    elif d == 'w' and in_bounds(r,c-1,height,width):
+        nc = c -1
+        v = grid[r][nc]
+        if v != 'o' and v < 0:
+            grid[r][nc] = 'o'
+            fill(('s',r,nc), grid, height, width)
+            fill(('w', r, nc), grid, height, width)
+            fill(('n', r, nc), grid, height, width)
+    elif d == 'e' and in_bounds(r,c+1,height,width):
+        nc = c +1
+        v = grid[r][nc]
+        if v != 'o' and v < 0:
+            grid[r][nc] = 'o'
+            fill(('s',r,nc), grid, height, width)
+            fill(('e', r, nc), grid, height, width)
+            fill(('n', r, nc), grid, height, width)
+
+def find_edge_start(grid, width, height):
+    for x in [0, height-1]:
+        for y in [0, width-1]:
+            v = grid[x][y]
+            if v != 'o' and v < 0:
+                grid[x][y] = 'o'
+                return (x,y)
+    return None
 
 def follow_path(paths, count, grid, height, lines, width):
 
