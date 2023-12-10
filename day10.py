@@ -29,13 +29,13 @@ def solve(lines):
     print('S=', r,c)
 
 
-    grid = [ [-1]*width for _ in range(height) ]
+    grid = [ [-2]*width for _ in range(height) ]
 
     starts = [(r, c,'n'),(r, c,'s'),(r, c,'w'),(r, c,'e')]
     grid[r][c] = 0
     print('starts',starts)
     res = follow_path(starts, -1, grid, height, lines, width)
-    #print('grid', grid)
+    print('grid', grid)
     print(res)
     return res
 
@@ -55,7 +55,7 @@ def follow_path(paths, count, grid, height, lines, width):
             if d == 'n' and is_valid(r - 1, c, height, width, grid):
                 ns = lines[r - 1][c]
                 if ns == '.':
-                    grid[r - 1][c] = 0
+                    grid[r - 1][c] = -1
                 elif ns == '|':
                     location = (r - 1, c, 'n')
                     grid[r - 1][c] = count
@@ -69,7 +69,7 @@ def follow_path(paths, count, grid, height, lines, width):
             elif d == 's' and is_valid(r + 1, c, height, width, grid):
                 ss = lines[r + 1][c]
                 if ss == '.':
-                    grid[r + 1][c] = 0
+                    grid[r + 1][c] = -1
                 elif ss == '|':
                     location = (r + 1, c, 's')
                     grid[r + 1][c] = count
@@ -83,7 +83,7 @@ def follow_path(paths, count, grid, height, lines, width):
             elif d == 'w' and is_valid(r, c - 1, height, width, grid):
                 ws = lines[r][c - 1]
                 if ws == '.':
-                    grid[r][c - 1] = 0
+                    grid[r][c - 1] = -1
                 elif ws == '-':
                     location = (r, c - 1, 'w')
                     grid[r][c - 1] = count
@@ -97,7 +97,7 @@ def follow_path(paths, count, grid, height, lines, width):
             elif d == 'e' and is_valid(r, c + 1, height, width, grid):
                 es = lines[r][c + 1]
                 if es == '.':
-                    grid[r][c + 1] = 0
+                    grid[r][c + 1] = -1
                 elif es == '-':
                     location = (r, c + 1, 'e')
                     grid[r][c + 1] = count
@@ -114,7 +114,7 @@ def follow_path(paths, count, grid, height, lines, width):
 
 
 def is_valid(r, c, height, width, grid):
-    return in_bounds(r, c, height, width) and grid[r][c] == -1
+    return in_bounds(r, c, height, width) and grid[r][c] == -2
 
 
 def in_bounds(r, c, height, width):
