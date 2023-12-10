@@ -45,9 +45,9 @@ def solve(lines, part2):
             print(edge_start)
             x,y = edge_start
             if x == 0:
-                fill(('s', x,y), grid, height, width)
+                fill(('s', x, y), grid, height, width, lines)
             else:
-                fill(('n', x, y), grid, height, width)
+                fill(('n', x, y), grid, height, width, lines)
                 print('grid', grid)
                 #fill(('e', x, y), grid, height, width)
             edge_start = find_edge_start(grid, width, height)
@@ -70,39 +70,47 @@ def solve(lines, part2):
         return res
 
 
-def fill(location, grid, height, width):
+def fill(location, grid, height, width, lines):
     d, r, c = location
 
     if d == 'n' and in_bounds(r-1,c,height,width):
         v = grid[r-1][c]
         if v != 'o' and v < 0:
             grid[r - 1][c] = 'o'
-            fill(('n',r-1,c), grid, height, width)
-            fill(('w', r - 1, c), grid, height, width)
-            fill(('e', r - 1, c), grid, height, width)
+            fill(('n', r - 1, c), grid, height, width, lines)
+            fill(('w', r - 1, c), grid, height, width, lines)
+            fill(('e', r - 1, c), grid, height, width, lines)
+        else:
+            v = lines[r-1][c]
+            if v in ['|', 'J','7'] and lines[r-1][c+1] in ['|','F','L']:
+                fill(('n', r - 1, c), grid, height, width, lines)
     elif d == 's' and in_bounds(r+1,c,height,width):
         v = grid[r+1][c]
         if v != 'o' and v < 0:
             grid[r+1][c] = 'o'
-            fill(('s',r+1,c), grid, height, width)
-            fill(('w', r+1, c), grid, height, width)
-            fill(('e', r+1, c), grid, height, width)
+            fill(('s', r + 1, c), grid, height, width, lines)
+            fill(('w', r + 1, c), grid, height, width, lines)
+            fill(('e', r + 1, c), grid, height, width, lines)
+        else:
+            v = lines[r+1][c]
+            if v in ['|', 'J','7'] and lines[r+1][c+1] in ['|','F','L']:
+                fill(('s', r + 1, c), grid, height, width, lines)
     elif d == 'w' and in_bounds(r,c-1,height,width):
         nc = c -1
         v = grid[r][nc]
         if v != 'o' and v < 0:
             grid[r][nc] = 'o'
-            fill(('s',r,nc), grid, height, width)
-            fill(('w', r, nc), grid, height, width)
-            fill(('n', r, nc), grid, height, width)
+            fill(('s', r, nc), grid, height, width, lines)
+            fill(('w', r, nc), grid, height, width, lines)
+            fill(('n', r, nc), grid, height, width, lines)
     elif d == 'e' and in_bounds(r,c+1,height,width):
         nc = c +1
         v = grid[r][nc]
         if v != 'o' and v < 0:
             grid[r][nc] = 'o'
-            fill(('s',r,nc), grid, height, width)
-            fill(('e', r, nc), grid, height, width)
-            fill(('n', r, nc), grid, height, width)
+            fill(('s', r, nc), grid, height, width, lines)
+            fill(('e', r, nc), grid, height, width, lines)
+            fill(('n', r, nc), grid, height, width, lines)
 
 def find_edge_start(grid, width, height):
     for x in [0, height-1]:
@@ -197,4 +205,5 @@ def in_bounds(r, c, height, width):
 if __name__ == '__main__':
     #assert day10('day10_test1.txt') == 4
     #assert day10('day10_input.txt') == 6613
-    assert day10('day10_test2.txt', True) == 4
+    #assert day10('day10_test2.txt', True) == 4
+    assert day10('day10_test3.txt', True) == 4
