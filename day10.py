@@ -82,7 +82,7 @@ def fill(location, grid, height, width, lines):
             fill(('e', r - 1, c), grid, height, width, lines)
         else:
             v = lines[r-1][c]
-            if v in ['|', 'J','7'] and lines[r-1][c+1] in ['|','F','L']:
+            if c < width - 1 and v in ['|', 'J','7'] and lines[r-1][c+1] in ['|','F','L']:
                 fill(('n', r - 1, c), grid, height, width, lines)
     elif d == 's' and in_bounds(r+1,c,height,width):
         v = grid[r+1][c]
@@ -93,7 +93,7 @@ def fill(location, grid, height, width, lines):
             fill(('e', r + 1, c), grid, height, width, lines)
         else:
             v = lines[r+1][c]
-            if v in ['|', 'J','7'] and lines[r+1][c+1] in ['|','F','L']:
+            if c < width - 1 and v in ['|', 'J','7'] and lines[r+1][c+1] in ['|','F','L']:
                 fill(('s', r + 1, c), grid, height, width, lines)
     elif d == 'w' and in_bounds(r,c-1,height,width):
         nc = c -1
@@ -113,12 +113,20 @@ def fill(location, grid, height, width, lines):
             fill(('n', r, nc), grid, height, width, lines)
 
 def find_edge_start(grid, width, height):
-    for x in [0, height-1]:
-        for y in [0, width-1]:
+    for x in range(0,height-1):
+        for y in [0, width - 1]:
             v = grid[x][y]
             if v != 'o' and v < 0:
                 grid[x][y] = 'o'
-                return (x,y)
+                return (x, y)
+
+    for y in range(0, width-1):
+        for x in [0, height - 1]:
+            v = grid[x][y]
+            if v != 'o' and v < 0:
+                grid[x][y] = 'o'
+                return (x, y)
+
     return None
 
 def follow_path(paths, count, grid, height, lines, width):
@@ -129,7 +137,7 @@ def follow_path(paths, count, grid, height, lines, width):
         for location in paths:
 
             r, c, d = location
-            print('current', location, lines[r][c])
+            #print('current', location, lines[r][c])
             location = None
 
             # North
@@ -206,4 +214,5 @@ if __name__ == '__main__':
     #assert day10('day10_test1.txt') == 4
     #assert day10('day10_input.txt') == 6613
     #assert day10('day10_test2.txt', True) == 4
-    assert day10('day10_test3.txt', True) == 4
+    #assert day10('day10_test3.txt', True) == 4
+    assert day10('day10_test4.txt', True) == 8
