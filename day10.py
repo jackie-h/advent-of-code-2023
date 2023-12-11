@@ -262,4 +262,7 @@ if __name__ == '__main__':
     assert day10('day10_test4.txt', True) == 8
     assert day10('day10_test5.txt', True) == 10
 
+    #West passage
+    assert day10('day10_test6.txt', True) == 4
+
     assert day10('day10_input.txt', True) == 10
