@@ -30,44 +30,45 @@ def solve(lines, part2):
             r += 1
         s = lines[r][c]
 
-    print('S=', r,c)
+    print('S=', r, c)
     visited = set()
 
-    starts = [(r, c,'n'),(r, c,'s'),(r, c,'w'),(r, c,'e')]
-    print('starts',starts)
+    starts = [(r, c, 'n'), (r, c, 's'), (r, c, 'w'), (r, c, 'e')]
+    print('starts', starts)
     res = follow_path(starts, -1, height, lines, width, visited)
     print('visited', visited)
     print(res)
 
     inside = 0
     if part2:
-        None
-        # edge_start = find_edge_start(grid, width, height)
-        # while edge_start is not None:
-        #     print(edge_start)
-        #     x,y = edge_start
-        #     if x == 0:
-        #         fill(('s', x, y), grid, height, width, lines)
-        #     else:
-        #         fill(('n', x, y), grid, height, width, lines)
-        #     if y == 0:
-        #         fill(('e', x, y), grid, height, width, lines)
-        #     else:
-        #         fill(('w', x, y), grid, height, width, lines)
-        #         #fill(('e', x, y), grid, height, width)
-        #     edge_start = find_edge_start(grid, width, height)
-        #
-        #
-        # for x in range(0,height):
-        #     for y in range(0,width):
-        #         v = grid[x][y]
-        #         if v != 'o' and v < 0:
-        #             inside += 1
-        #
-        # print('grid', grid)
-        # for row in grid:
-        #     print(*row, sep="\t")
-        #print('\n'.join(' '.join(str(x) for x in row) for row in grid))
+
+        for i, line in enumerate(lines):
+            lines[i] = list(line)
+
+        edge_start = find_edge_start(lines, width, height, visited)
+        while edge_start is not None:
+            print(edge_start)
+            x, y = edge_start
+            if x == 0:
+                fill(('s', x, y), height, width, lines, visited)
+            else:
+                fill(('n', x, y), height, width, lines, visited)
+            if y == 0:
+                fill(('e', x, y), height, width, lines, visited)
+            else:
+                fill(('w', x, y), height, width, lines, visited)
+                # fill(('e', x, y), grid, height, width)
+            edge_start = find_edge_start(lines, width, height, visited)
+
+        for x in range(0, height):
+            for y in range(0, width):
+                v = lines[x][y]
+                if v != 'o' and (x, y) not in visited:
+                    inside += 1
+
+        for row in lines:
+            print(*row, sep=" ")
+        # print('\n'.join(' '.join(str(x) for x in row) for row in grid))
 
     if part2:
         return inside
@@ -75,112 +76,113 @@ def solve(lines, part2):
         return res
 
 
-def fill(location, grid, height, width, lines):
+def fill(location, height, width, lines, visited):
     d, r, c = location
 
-    if d == 'n' and in_bounds(r-1,c,height,width):
-        v = grid[r-1][c]
-        if v != 'o' and v < 0:
-            grid[r - 1][c] = 'o'
-            fill(('n', r - 1, c), grid, height, width, lines)
-            fill(('w', r - 1, c), grid, height, width, lines)
-            fill(('e', r - 1, c), grid, height, width, lines)
+    if d == 'n' and in_bounds(r - 1, c, height, width):
+        v = lines[r - 1][c]
+        if v != 'o' and (r - 1, c) not in visited:
+            lines[r - 1][c] = 'o'
+            fill(('n', r - 1, c), height, width, lines, visited)
+            fill(('w', r - 1, c), height, width, lines, visited)
+            fill(('e', r - 1, c), height, width, lines, visited)
         else:
-            v = lines[r-1][c]
-            if c < width - 1 and v in ['|', 'J','7']:
-                a = grid[r-1][c+1]
-                av = lines[r-1][c+1]
-                if a != 'o' and a < 0:
-                    grid[r - 1][c+1] = 'o'
-                    fill(('n', r - 1, c), grid, height, width, lines)
-                    fill(('n', r - 1, c+1), grid, height, width, lines)
-                elif av in ['|','F','L']:
-                    fill(('n', r - 1, c), grid, height, width, lines)
-    elif d == 's' and in_bounds(r+1,c,height,width):
-        v = grid[r+1][c]
-        if v != 'o' and v < 0:
-            grid[r+1][c] = 'o'
-            fill(('s', r + 1, c), grid, height, width, lines)
-            fill(('w', r + 1, c), grid, height, width, lines)
-            fill(('e', r + 1, c), grid, height, width, lines)
+            v = lines[r - 1][c]
+            if c < width - 1 and v in ['|', 'J', '7']:
+                a = lines[r - 1][c + 1]
+                av = lines[r - 1][c + 1]
+                if a != 'o' and (r - 1, c + 1) not in visited:
+                    lines[r - 1][c + 1] = 'o'
+                    fill(('n', r - 1, c), height, width, lines, visited)
+                    fill(('n', r - 1, c + 1), height, width, lines, visited)
+                elif av in ['|', 'F', 'L']:
+                    fill(('n', r - 1, c), height, width, lines, visited)
+    elif d == 's' and in_bounds(r + 1, c, height, width):
+        v = lines[r + 1][c]
+        if v != 'o' and (r + 1, c) not in visited:
+            lines[r + 1][c] = 'o'
+            fill(('s', r + 1, c), height, width, lines, visited)
+            fill(('w', r + 1, c), height, width, lines, visited)
+            fill(('e', r + 1, c), height, width, lines, visited)
         else:
-            v = lines[r+1][c]
-            if c < width - 1 and v in ['|', 'J','7']:
-                a = grid[r+1][c+1]
-                av = lines[r+1][c+1]
-                if a != 'o' and a < 0:
-                    grid[r + 1][c + 1] = 'o'
-                    fill(('s', r + 1, c), grid, height, width, lines)
-                    fill(('s', r + 1, c + 1), grid, height, width, lines)
-                elif av in ['|','F','L']:
-                    fill(('s', r + 1, c), grid, height, width, lines)
-    elif d == 'w' and in_bounds(r,c-1,height,width):
-        nc = c -1
-        v = grid[r][nc]
-        if v != 'o' and v < 0:
-            grid[r][nc] = 'o'
-            fill(('s', r, nc), grid, height, width, lines)
-            fill(('w', r, nc), grid, height, width, lines)
-            fill(('n', r, nc), grid, height, width, lines)
-        else:
-            v = lines[r][nc]
-            if r < height - 1 and v in ['-', 'J','L']:
-                a = grid[r+1][nc]
-                av = lines[r+1][nc]
-                if a != 'o' and a < 0:
-                    grid[r+1][nc] = 'o'
-                    fill(('w', r, nc), grid, height, width, lines)
-                    fill(('w', r+1, nc), grid, height, width, lines)
-                elif av in ['-','F','7']:
-                    fill(('w', r, nc), grid, height, width, lines)
-    elif d == 'e' and in_bounds(r,c+1,height,width):
-        nc = c +1
-        v = grid[r][nc]
-        if v != 'o' and v < 0:
-            grid[r][nc] = 'o'
-            fill(('s', r, nc), grid, height, width, lines)
-            fill(('e', r, nc), grid, height, width, lines)
-            fill(('n', r, nc), grid, height, width, lines)
+            v = lines[r + 1][c]
+            if c < width - 1 and v in ['|', 'J', '7']:
+                a = lines[r + 1][c + 1]
+                av = lines[r + 1][c + 1]
+                if a != 'o' and (r + 1, c + 1) not in visited:
+                    lines[r + 1][c + 1] = 'o'
+                    fill(('s', r + 1, c), height, width, lines, visited)
+                    fill(('s', r + 1, c + 1), height, width, lines, visited)
+                elif av in ['|', 'F', 'L']:
+                    fill(('s', r + 1, c), height, width, lines, visited)
+    elif d == 'w' and in_bounds(r, c - 1, height, width):
+        nc = c - 1
+        v = lines[r][nc]
+        if v != 'o' and (r, nc) not in visited:
+            lines[r][nc] = 'o'
+            fill(('s', r, nc), height, width, lines, visited)
+            fill(('w', r, nc), height, width, lines, visited)
+            fill(('n', r, nc), height, width, lines, visited)
         else:
             v = lines[r][nc]
-            if r < height - 1 and v in ['-', 'J','L']:
-                a = grid[r+1][nc]
-                av = lines[r+1][nc]
-                if a != 'o' and a < 0:
-                    grid[r+1][nc] = 'o'
-                    fill(('e', r, nc), grid, height, width, lines)
-                    fill(('e', r+1, nc), grid, height, width, lines)
-                elif av in ['-','F','7']:
-                    fill(('e', r, nc), grid, height, width, lines)
+            if r < height - 1 and v in ['-', 'J', 'L']:
+                a = lines[r + 1][nc]
+                av = lines[r + 1][nc]
+                if a != 'o' and (r + 1, nc) not in visited:
+                    lines[r + 1][nc] = 'o'
+                    fill(('w', r, nc), height, width, lines, visited)
+                    fill(('w', r + 1, nc), height, width, lines, visited)
+                elif av in ['-', 'F', '7']:
+                    fill(('w', r, nc), height, width, lines, visited)
+    elif d == 'e' and in_bounds(r, c + 1, height, width):
+        nc = c + 1
+        v = lines[r][nc]
+        if v != 'o' and (r, nc) not in visited:
+            lines[r][nc] = 'o'
+            fill(('s', r, nc), height, width, lines, visited)
+            fill(('e', r, nc), height, width, lines, visited)
+            fill(('n', r, nc), height, width, lines, visited)
+        else:
+            v = lines[r][nc]
+            if r < height - 1 and v in ['-', 'J', 'L']:
+                a = lines[r + 1][nc]
+                av = lines[r + 1][nc]
+                if a != 'o' and (r + 1, nc) not in visited:
+                    lines[r + 1][nc] = 'o'
+                    fill(('e', r, nc), height, width, lines, visited)
+                    fill(('e', r + 1, nc), height, width, lines, visited)
+                elif av in ['-', 'F', '7']:
+                    fill(('e', r, nc), height, width, lines, visited)
 
-def find_edge_start(grid, width, height):
-    for x in range(0,height):
+
+def find_edge_start(lines, width, height, visited):
+    for x in range(0, height):
         for y in [0, width - 1]:
-            v = grid[x][y]
-            if v != 'o' and v < 0:
-                grid[x][y] = 'o'
+            v = lines[x][y]
+            if v != 'o' and (x, y) not in visited:
+                lines[x][y] = 'o'
                 return (x, y)
 
     for y in range(0, width):
         for x in [0, height - 1]:
-            v = grid[x][y]
-            if v != 'o' and v < 0:
-                grid[x][y] = 'o'
+            v = lines[x][y]
+            if v != 'o' and (x, y) not in visited:
+                lines[x][y] = 'o'
                 return (x, y)
 
     return None
 
-def follow_path(paths, count, height, lines, width, visited):
 
+def follow_path(paths, count, height, lines, width, visited):
     while len(paths) > 0:
         new_paths = []
         count += 1
         for location in paths:
 
             r, c, d = location
-            #print('current', location, lines[r][c])
+            # print('current', location, lines[r][c])
             location = None
-            visited.add((r,c))
+            visited.add((r, c))
 
             # North
             if d == 'n' and is_valid(r - 1, c, height, width, visited):
@@ -225,7 +227,7 @@ def follow_path(paths, count, height, lines, width, visited):
 
 
 def is_valid(r, c, height, width, visited: set):
-    return in_bounds(r, c, height, width) and (r,c) not in visited #and grid[r][c] == -2
+    return in_bounds(r, c, height, width) and (r, c) not in visited  # and grid[r][c] == -2
 
 
 def in_bounds(r, c, height, width):
@@ -233,17 +235,17 @@ def in_bounds(r, c, height, width):
 
 
 if __name__ == '__main__':
-    assert day10('day10_test1.txt', False) == 4
-    assert day10('day10_input.txt', False) == 6613
-    # assert day10('day10_test2.txt', True) == 4
-    # assert day10('day10_test3.txt', True) == 4
-    # assert day10('day10_test4.txt', True) == 8
-    # assert day10('day10_test5.txt', True) == 10
-    #
-    # #West passage
-    # assert day10('day10_test6.txt', True) == 4
-    #
-    # #East passage
-    # assert day10('day10_test7.txt', True) == 4
-    #
-    # assert day10('day10_input.txt', True) == 10
+    # assert day10('day10_test1.txt', False) == 4
+    # assert day10('day10_input.txt', False) == 6613
+    assert day10('day10_test2.txt', True) == 4
+    assert day10('day10_test3.txt', True) == 4
+    assert day10('day10_test4.txt', True) == 8
+    assert day10('day10_test5.txt', True) == 10
+
+    # West passage
+    assert day10('day10_test6.txt', True) == 4
+
+    # East passage
+    assert day10('day10_test7.txt', True) == 4
+
+    assert day10('day10_input.txt', True) == 10
