@@ -134,6 +134,8 @@ def check_north_sliver(r, c, height, width, lines, v, visited):
             lines[nr][c + 1] = 'o'
             fill(('n', nr, c), height, width, lines, visited)
             fill(('n', nr, c + 1), height, width, lines, visited)
+            fill(('w', nr, c + 1), height, width, lines, visited)
+            fill(('e', nr, c + 1), height, width, lines, visited)
         elif a in ['|', 'F', 'L']:
             fill(('n', nr, c), height, width, lines, visited)
 
@@ -146,6 +148,8 @@ def check_south_slither(r, c, height, width, lines, v, visited):
             lines[nr][c + 1] = 'o'
             fill(('s', nr, c), height, width, lines, visited)
             fill(('s', nr, c + 1), height, width, lines, visited)
+            fill(('w', nr, c + 1), height, width, lines, visited)
+            fill(('e', nr, c + 1), height, width, lines, visited)
         elif a in ['|', 'F', 'L']:
             fill(('s', nr, c), height, width, lines, visited)
 
@@ -158,6 +162,8 @@ def check_west_slither(r, c, height, width, lines, v, visited):
             lines[r + 1][nc] = 'o'
             fill(('w', r, nc), height, width, lines, visited)
             fill(('w', r + 1, nc), height, width, lines, visited)
+            fill(('s', r + 1, nc), height, width, lines, visited)
+            fill(('n', r + 1, nc), height, width, lines, visited)
         elif a in ['-', 'F', '7']:
             fill(('w', r, nc), height, width, lines, visited)
 
@@ -170,6 +176,8 @@ def check_east_slither(r, c, height, width, lines, v, visited):
             lines[r + 1][nc] = 'o'
             fill(('e', r, nc), height, width, lines, visited)
             fill(('e', r + 1, nc), height, width, lines, visited)
+            fill(('s', r + 1, nc), height, width, lines, visited)
+            fill(('n', r + 1, nc), height, width, lines, visited)
         elif a in ['-', 'F', '7']:
             fill(('e', r, nc), height, width, lines, visited)
 
@@ -263,17 +271,17 @@ def in_bounds(r, c, height, width):
 if __name__ == '__main__':
     # assert day10('day10_test1.txt', False) == 4
     # assert day10('day10_input.txt', False) == 6613
-    # assert day10('day10_test2.txt', True) == 4
-    # assert day10('day10_test3.txt', True) == 4
-    # assert day10('day10_test4.txt', True) == 8
-    # assert day10('day10_test5.txt', True) == 10
-    #
-    # # West passage
-    # assert day10('day10_test6.txt', True) == 4
-    #
-    # # East passage
-    # assert day10('day10_test7.txt', True) == 4
-    # assert day10('day10_test8.txt', True) == 4
+    assert day10('day10_test2.txt', True) == 4
+    assert day10('day10_test3.txt', True) == 4
+    assert day10('day10_test4.txt', True) == 8
+    assert day10('day10_test5.txt', True) == 10
+
+    # West passage
+    assert day10('day10_test6.txt', True) == 4
+
+    # East passage
+    assert day10('day10_test7.txt', True) == 4
+    assert day10('day10_test8.txt', True) == 4
     assert day10('day10_test9.txt', True) == 0
 
     #assert day10('day10_input.txt', True) == 517
