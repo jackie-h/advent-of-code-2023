@@ -77,6 +77,7 @@ def solve(lines, part2):
 
 
 def fill(location, height, width, lines, visited):
+    #current location and direction to move
     d, r, c = location
 
     if d == 'n' and in_bounds(r - 1, c, height, width):
@@ -98,7 +99,7 @@ def fill(location, height, width, lines, visited):
             fill(('w', nr, c), height, width, lines, visited)
             fill(('e', nr, c), height, width, lines, visited)
         else:
-            check_south_slither(nr, c, height, width, lines, v, visited)
+            check_south_slither(r, c, height, width, lines, v, visited)
     elif d == 'w' and in_bounds(r, c - 1, height, width):
         nc = c - 1
         v = lines[r][nc]
@@ -108,7 +109,7 @@ def fill(location, height, width, lines, visited):
             fill(('w', r, nc), height, width, lines, visited)
             fill(('n', r, nc), height, width, lines, visited)
         else:
-            check_west_slither(r, nc, height, width, lines, v, visited)
+            check_west_slither(r, c, height, width, lines, v, visited)
     elif d == 'e' and in_bounds(r, c + 1, height, width):
         nc = c + 1
         v = lines[r][nc]
@@ -133,8 +134,9 @@ def check_north_sliver(r, c, height, width, lines, v, visited):
             fill(('n', nr, c), height, width, lines, visited)
 
 
-def check_south_slither(nr, c, height, width, lines, v, visited):
-    if c < width - 1 and v in ['|', 'J', '7']:
+def check_south_slither(r, c, height, width, lines, v, visited):
+    nr = r + 1
+    if r < height - 1 and c < width - 1 and v in ['|', 'J', '7']:
         a = lines[nr][c + 1]
         if a != 'o' and (nr, c + 1) not in visited:
             lines[nr][c + 1] = 'o'
@@ -144,7 +146,8 @@ def check_south_slither(nr, c, height, width, lines, v, visited):
             fill(('s', nr, c), height, width, lines, visited)
 
 
-def check_west_slither(r, nc, height, width, lines, v, visited):
+def check_west_slither(r, c, height, width, lines, v, visited):
+    nc = c - 1
     if r < height - 1 and v in ['-', 'J', 'L']:
         a = lines[r + 1][nc]
         if a != 'o' and (r + 1, nc) not in visited:
@@ -157,7 +160,7 @@ def check_west_slither(r, nc, height, width, lines, v, visited):
 
 def check_east_slither(r, c, height, width, lines, v, visited):
     nc = c + 1
-    if r < height - 1 and v in ['-', 'J', 'L']:
+    if r < height - 1 and c < width -1 and v in ['-', 'J', 'L']:
         a = lines[r + 1][nc]
         if a != 'o' and (r + 1, nc) not in visited:
             lines[r + 1][nc] = 'o'
@@ -256,17 +259,17 @@ def in_bounds(r, c, height, width):
 if __name__ == '__main__':
     # assert day10('day10_test1.txt', False) == 4
     # assert day10('day10_input.txt', False) == 6613
-    # assert day10('day10_test2.txt', True) == 4
-    # assert day10('day10_test3.txt', True) == 4
-    # assert day10('day10_test4.txt', True) == 8
-    # assert day10('day10_test5.txt', True) == 10
-    # #
-    # # # West passage
-    # assert day10('day10_test6.txt', True) == 4
-    # #
-    # # # East passage
-    # assert day10('day10_test7.txt', True) == 4
-    # assert day10('day10_test8.txt', True) == 4
+    assert day10('day10_test2.txt', True) == 4
+    assert day10('day10_test3.txt', True) == 4
+    assert day10('day10_test4.txt', True) == 8
+    assert day10('day10_test5.txt', True) == 10
+
+    # West passage
+    assert day10('day10_test6.txt', True) == 4
+
+    # East passage
+    assert day10('day10_test7.txt', True) == 4
+    assert day10('day10_test8.txt', True) == 4
     assert day10('day10_test9.txt', True) == 0
 
     #assert day10('day10_input.txt', True) == 517
