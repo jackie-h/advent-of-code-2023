@@ -45,8 +45,8 @@ def solve(lines, part2):
         for i, line in enumerate(lines):
             lines[i] = list(line)
 
-        edge_start = find_edge_start(lines, width, height, visited)
-        while edge_start is not None:
+        edge_starts = find_edge_start(lines, width, height, visited)
+        for edge_start in edge_starts:
             print(edge_start)
             x, y = edge_start
             if x == 0:
@@ -58,7 +58,6 @@ def solve(lines, part2):
             else:
                 fill(('w', x, y), height, width, lines, visited)
                 # fill(('e', x, y), grid, height, width)
-            edge_start = find_edge_start(lines, width, height, visited)
 
         for x in range(0, height):
             for y in range(0, width):
@@ -153,21 +152,28 @@ def fill(location, height, width, lines, visited):
 
 
 def find_edge_start(lines, width, height, visited):
+    starts = []
     for x in range(0, height):
         for y in [0, width - 1]:
             v = lines[x][y]
             if v != 'o' and (x, y) not in visited:
                 lines[x][y] = 'o'
-                return (x, y)
+                starts.append((x, y))
+            elif v in ['-','L', 'J'] and x < height - 1 \
+                    and lines[x+1][y] in ['-','F','7']:
+                starts.append((x, y))
 
     for y in range(0, width):
         for x in [0, height - 1]:
             v = lines[x][y]
             if v != 'o' and (x, y) not in visited:
                 lines[x][y] = 'o'
-                return (x, y)
+                starts.append((x, y))
+            elif v in ['|', 'J', '7'] and y < width - 1 \
+                    and lines[x][y+1] in ['|', 'F', 'L']:
+                starts.append((x, y))
 
-    return None
+    return starts
 
 
 def follow_path(paths, count, height, lines, width, visited):
@@ -244,5 +250,6 @@ if __name__ == '__main__':
 
     # East passage
     assert day10('day10_test7.txt', True) == 4
+    assert day10('day10_test8.txt', True) == 4
 
-    #assert day10('day10_input.txt', True) == 517
+    assert day10('day10_input.txt', True) == 517
