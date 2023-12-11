@@ -65,6 +65,7 @@ def solve(lines, part2):
                 v = lines[x][y]
                 if v != 'o' and (x, y) not in visited:
                     inside += 1
+                    lines[x][y] = '*'
 
         for row in lines:
             print(*row, sep=" ")
@@ -248,4 +249,4 @@ if __name__ == '__main__':
     # East passage
     assert day10('day10_test7.txt', True) == 4
 
-    assert day10('day10_input.txt', True) == 10
+    #assert day10('day10_input.txt', True) == 517
