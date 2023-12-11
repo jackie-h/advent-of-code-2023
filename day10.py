@@ -91,12 +91,11 @@ def fill(location, height, width, lines, visited):
             v = lines[r - 1][c]
             if c < width - 1 and v in ['|', 'J', '7']:
                 a = lines[r - 1][c + 1]
-                av = lines[r - 1][c + 1]
                 if a != 'o' and (r - 1, c + 1) not in visited:
                     lines[r - 1][c + 1] = 'o'
                     fill(('n', r - 1, c), height, width, lines, visited)
                     fill(('n', r - 1, c + 1), height, width, lines, visited)
-                elif av in ['|', 'F', 'L']:
+                elif a in ['|', 'F', 'L']:
                     fill(('n', r - 1, c), height, width, lines, visited)
     elif d == 's' and in_bounds(r + 1, c, height, width):
         v = lines[r + 1][c]
@@ -109,12 +108,11 @@ def fill(location, height, width, lines, visited):
             v = lines[r + 1][c]
             if c < width - 1 and v in ['|', 'J', '7']:
                 a = lines[r + 1][c + 1]
-                av = lines[r + 1][c + 1]
                 if a != 'o' and (r + 1, c + 1) not in visited:
                     lines[r + 1][c + 1] = 'o'
                     fill(('s', r + 1, c), height, width, lines, visited)
                     fill(('s', r + 1, c + 1), height, width, lines, visited)
-                elif av in ['|', 'F', 'L']:
+                elif a in ['|', 'F', 'L']:
                     fill(('s', r + 1, c), height, width, lines, visited)
     elif d == 'w' and in_bounds(r, c - 1, height, width):
         nc = c - 1
@@ -128,12 +126,11 @@ def fill(location, height, width, lines, visited):
             v = lines[r][nc]
             if r < height - 1 and v in ['-', 'J', 'L']:
                 a = lines[r + 1][nc]
-                av = lines[r + 1][nc]
                 if a != 'o' and (r + 1, nc) not in visited:
                     lines[r + 1][nc] = 'o'
                     fill(('w', r, nc), height, width, lines, visited)
                     fill(('w', r + 1, nc), height, width, lines, visited)
-                elif av in ['-', 'F', '7']:
+                elif a in ['-', 'F', '7']:
                     fill(('w', r, nc), height, width, lines, visited)
     elif d == 'e' and in_bounds(r, c + 1, height, width):
         nc = c + 1
@@ -147,12 +144,11 @@ def fill(location, height, width, lines, visited):
             v = lines[r][nc]
             if r < height - 1 and v in ['-', 'J', 'L']:
                 a = lines[r + 1][nc]
-                av = lines[r + 1][nc]
                 if a != 'o' and (r + 1, nc) not in visited:
                     lines[r + 1][nc] = 'o'
                     fill(('e', r, nc), height, width, lines, visited)
                     fill(('e', r + 1, nc), height, width, lines, visited)
-                elif av in ['-', 'F', '7']:
+                elif a in ['-', 'F', '7']:
                     fill(('e', r, nc), height, width, lines, visited)
 
 
