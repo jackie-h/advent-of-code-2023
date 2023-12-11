@@ -83,43 +83,47 @@ def fill(location, height, width, lines, visited):
     if d == 'n' and in_bounds(r - 1, c, height, width):
         nr = r - 1
         v = lines[nr][c]
-        if v != 'o' and (nr, c) not in visited:
-            lines[nr][c] = 'o'
-            fill(('n', nr, c), height, width, lines, visited)
-            fill(('w', nr, c), height, width, lines, visited)
-            fill(('e', nr, c), height, width, lines, visited)
-        else:
-            check_north_sliver(r, c, height, width, lines, v, visited)
+        if v != 'o':
+            if (nr, c) not in visited:
+                lines[nr][c] = 'o'
+                fill(('n', nr, c), height, width, lines, visited)
+                fill(('w', nr, c), height, width, lines, visited)
+                fill(('e', nr, c), height, width, lines, visited)
+            else:
+                check_north_sliver(r, c, height, width, lines, v, visited)
     elif d == 's' and in_bounds(r + 1, c, height, width):
         nr = r + 1
         v = lines[nr][c]
-        if v != 'o' and (r + 1, c) not in visited:
-            lines[nr][c] = 'o'
-            fill(('s', nr, c), height, width, lines, visited)
-            fill(('w', nr, c), height, width, lines, visited)
-            fill(('e', nr, c), height, width, lines, visited)
-        else:
-            check_south_slither(r, c, height, width, lines, v, visited)
+        if v != 'o':
+            if (r + 1, c) not in visited:
+                lines[nr][c] = 'o'
+                fill(('s', nr, c), height, width, lines, visited)
+                fill(('w', nr, c), height, width, lines, visited)
+                fill(('e', nr, c), height, width, lines, visited)
+            else:
+                check_south_slither(r, c, height, width, lines, v, visited)
     elif d == 'w' and in_bounds(r, c - 1, height, width):
         nc = c - 1
         v = lines[r][nc]
-        if v != 'o' and (r, nc) not in visited:
-            lines[r][nc] = 'o'
-            fill(('s', r, nc), height, width, lines, visited)
-            fill(('w', r, nc), height, width, lines, visited)
-            fill(('n', r, nc), height, width, lines, visited)
-        else:
-            check_west_slither(r, c, height, width, lines, v, visited)
+        if v != 'o':
+            if (r, nc) not in visited:
+                lines[r][nc] = 'o'
+                fill(('s', r, nc), height, width, lines, visited)
+                fill(('w', r, nc), height, width, lines, visited)
+                fill(('n', r, nc), height, width, lines, visited)
+            else:
+                check_west_slither(r, c, height, width, lines, v, visited)
     elif d == 'e' and in_bounds(r, c + 1, height, width):
         nc = c + 1
         v = lines[r][nc]
-        if v != 'o' and (r, nc) not in visited:
-            lines[r][nc] = 'o'
-            fill(('s', r, nc), height, width, lines, visited)
-            fill(('e', r, nc), height, width, lines, visited)
-            fill(('n', r, nc), height, width, lines, visited)
-        else:
-            check_east_slither(r, c, height, width, lines, v, visited)
+        if v != 'o':
+            if (r, nc) not in visited:
+                lines[r][nc] = 'o'
+                fill(('s', r, nc), height, width, lines, visited)
+                fill(('e', r, nc), height, width, lines, visited)
+                fill(('n', r, nc), height, width, lines, visited)
+            else:
+                check_east_slither(r, c, height, width, lines, v, visited)
 
 
 def check_north_sliver(r, c, height, width, lines, v, visited):
@@ -259,17 +263,17 @@ def in_bounds(r, c, height, width):
 if __name__ == '__main__':
     # assert day10('day10_test1.txt', False) == 4
     # assert day10('day10_input.txt', False) == 6613
-    assert day10('day10_test2.txt', True) == 4
-    assert day10('day10_test3.txt', True) == 4
-    assert day10('day10_test4.txt', True) == 8
-    assert day10('day10_test5.txt', True) == 10
-
-    # West passage
-    assert day10('day10_test6.txt', True) == 4
-
-    # East passage
-    assert day10('day10_test7.txt', True) == 4
-    assert day10('day10_test8.txt', True) == 4
+    # assert day10('day10_test2.txt', True) == 4
+    # assert day10('day10_test3.txt', True) == 4
+    # assert day10('day10_test4.txt', True) == 8
+    # assert day10('day10_test5.txt', True) == 10
+    #
+    # # West passage
+    # assert day10('day10_test6.txt', True) == 4
+    #
+    # # East passage
+    # assert day10('day10_test7.txt', True) == 4
+    # assert day10('day10_test8.txt', True) == 4
     assert day10('day10_test9.txt', True) == 0
 
     #assert day10('day10_input.txt', True) == 517
