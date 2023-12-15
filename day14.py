@@ -1,5 +1,3 @@
-from itertools import combinations
-
 
 def day14(filename):
     print('Day 14: Parabolic Reflector Dish')
@@ -17,19 +15,21 @@ def solve(lines):
     res = 0
 
     height = len(lines)
-    res = [0]*len(lines[0])
+    res = [[]]*len(lines[0])
     vals = [height]*len(lines[0])
     for x,line in enumerate(lines):
         for y,c in enumerate(line):
             if c == 'O':
                 val = vals[y]
                 vals[y] = vals[y] - 1
-                res[y] = res[y] + val
+                res[y].append(val)
                 print((x,y),val)
             elif c == '#':
                 vals[y] = height - x - 1
-
-    return sum(res)
+    total = 0
+    for r in res:
+        total += sum(r)
+    return total
 
 
 if __name__ == '__main__':
