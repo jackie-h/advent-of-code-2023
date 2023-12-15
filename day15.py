@@ -71,6 +71,6 @@ if __name__ == '__main__':
     assert day15('day15_test.txt', False) == 1320
     assert day15('day15_input.txt', False) == 501680
     assert day15('day15_test.txt', True) == 145
-    assert day15('day15_input.txt', True) == 501680
+    assert day15('day15_input.txt', True) == 241094
 
 
