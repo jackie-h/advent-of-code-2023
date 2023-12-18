@@ -15,12 +15,12 @@ def solve(lines, part2):
     res = 0
 
     if not part2:
-        size = 5
-        grid = [['.']*size for i in range(size)]
         cx, cy = 0,0
-        grid[cx][cy] = '#'
+        border_len = 1
+        coords = [(cx, cy)]
         for line in lines:
-            d,v,c = line.split()
+            d,sv,c = line.split()
+            v = int(sv)
             ix = 0
             iy = 0
             if d == 'R':
@@ -32,47 +32,20 @@ def solve(lines, part2):
             elif d == 'U':
                 ix = -1
 
-            for i in range(0,int(v)):
-                cx = cx + ix
-                cy = cy + iy
-                if cx < 0:
-                    width = len(grid[0])
-                    row = ['.']*width
-                    grid.insert(0,row)
-                    if cx < 0:
-                        cx += 1
-                elif cx >= len(grid):
-                    grid.append(['.']*len(grid[0]))
-                elif cy < 0:
-                    for i in range(0,len(grid)):
-                        grid[i].insert(0,'.')
-                    cy += 1
-                elif cy >= len(grid[0]):
-                    for i in range(0,len(grid)):
-                        grid[i].insert(cy,'.')
+            cx = cx + ix * v
+            cy = cy + iy * v
+            border_len += v
+            coords.append((cx,cy))
 
-                grid[cx][cy] = '#'
+        # area
+        area = 0
+        for i in range(1, len(coords)):
+            x1, y1 = coords[i - 1]
+            x2, y2 = coords[i]
+            area += (y1 + y2) * (x1 - x2)
 
-        for x in range(0,len(grid)):
-            print(*grid[x], sep="")
-        # print('\n'.join(' '.join(str(x) for x in row) for row in grid))
-
-
-        #Fill
-        for i in range(0,len(grid)):
-            dot_count = 0
-            seen_hash = False
-            for j in range(0,len(grid[0])):
-                if grid[i][j] == '#':
-                    seen_hash = True
-                    res += 1
-                    if dot_count > 0:
-                        seen_hash = False
-                        res += dot_count
-                        dot_count = 0
-                else:
-                    if seen_hash:
-                        dot_count += 1
+        area = (abs(area) + border_len + 1) / 2
+        res = area
 
     else:
         print('')
@@ -82,7 +55,8 @@ def solve(lines, part2):
 
 if __name__ == '__main__':
     assert day18('day18_test.txt', False) == 62
-    assert day18('day18_input.txt', False) == 62
+    assert day18('day18_test2.txt', False) == 33
+    assert day18('day18_input.txt', False) == 70026
 
 
 
