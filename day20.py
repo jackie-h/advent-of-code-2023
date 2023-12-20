@@ -26,12 +26,15 @@ def solve(lines, part2):
 
     states = {}
 
+    total = [0,0]
+
     for i in range(0,1000):
         pulses = push(connections,states)
         print(i,pulses,res)
-        res += pulses[0] * pulses[1]
+        total[0] = total[0] + pulses[0]
+        total[1] = total[1] + pulses[1]
 
-    res = res * 1000
+    res = total[0] * total[1]
     return res
 
 
@@ -52,32 +55,33 @@ def move(connections, move_blocks, pulses, state):
         for n in moves:
             print(prev, pulse, '->', n)
             pulses[pulse] += 1
-            type, x = connections[n]
-            if type == '%':
-                if state.get(n) is None:
-                    state[n] = 'off'
-                if pulse == 0:
-                    if state[n] == 'off':
-                        state[n] = 'on'
-                        next.append((n, 1, x))
-                    else:
+            if connections.get(n) is not None:
+                type, x = connections[n]
+                if type == '%':
+                    if state.get(n) is None:
                         state[n] = 'off'
+                    if pulse == 0:
+                        if state[n] == 'off':
+                            state[n] = 'on'
+                            next.append((n, 1, x))
+                        else:
+                            state[n] = 'off'
+                            next.append((n, 0, x))
+
+                elif type == '&':
+                    current = state.get(n)
+                    if current is None:
+                        current = {}
+                        state[n] = current
+                        for k, v in connections.items():
+                            if n in v[1]:
+                                current[k] = 0
+                    current[prev] = pulse
+
+                    if sum(current.values()) == len(current.keys()):
                         next.append((n, 0, x))
-
-            elif type == '&':
-                current = state.get(n)
-                if current is None:
-                    current = {}
-                    state[n] = current
-                    for k, v in connections.items():
-                        if n in v[1]:
-                            current[k] = 0
-                current[prev] = pulse
-
-                if sum(current.values()) == len(current.keys()):
-                    next.append((n, 0, x))
-                else:
-                    next.append((n, 1, x))
+                    else:
+                        next.append((n, 1, x))
 
     if len(next) > 0:
         pulses = move(connections, next, pulses, state)
@@ -86,3 +90,4 @@ def move(connections, move_blocks, pulses, state):
 
 if __name__ == '__main__':
     assert day20('day20_test.txt', False) == 32000000
+    assert day20('day20_test2.txt', False) == 11687500
