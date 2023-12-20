@@ -46,16 +46,54 @@ def solve(lines, part2):
 
             rules[key] = exp
 
-    for i in inputs:
+    if part2:
+        res = 1
         rl = rules['in']
-        ar = run_rule(i, rl, rules)
-        print(i,ar)
-        if ar == 'A':
-            for v in i.values():
-                res += v
+        current = [[]]
+        run_rule_2(rl, rules, current)
+        for l,b,t in current:
+            res += res * (t-b)
+        print(current)
+
+    else:
+        for i in inputs:
+            rl = rules['in']
+            ar = run_rule(i, rl, rules)
+            print(i,ar)
+            if ar == 'A':
+                for v in i.values():
+                    res += v
+
 
     return res
 
+def run_rule_2(rl, rules, current):
+    for rc in rl:
+        for ek, ee in rc.items():
+            if ee is None:
+                check_result_2(ek, rules, current)
+            else:
+                l, g, v = ee
+                if g == '<':
+                    current[len(current)].append((l,0,v-1))
+                    check_result_2(ek, rules, current)
+                elif g == '>':
+                    current[len(current)].append((l,v+1,4000))
+                    check_result_2(ek, rules, current)
+
+def check_result_2(ek, rules, current):
+    if ek == 'A':
+        return current
+    elif ek == 'R':
+        current.pop()
+        return current
+    else:
+        nr = rules[ek]
+        if nr is not None:
+            print('->', ek)
+            return run_rule_2(nr, rules, current)
+        else:
+            return
 
 def run_rule(i, rl, rules):
     for rc in rl:
@@ -90,5 +128,7 @@ def check_result(i, ek, rules):
 
 
 if __name__ == '__main__':
-    assert day19('day19_test.txt', False) == 19114
-    assert day19('day19_input.txt', False) == 319295
+    #assert day19('day19_test.txt', False) == 19114
+    #assert day19('day19_input.txt', False) == 319295
+
+    assert day19('day19_test.txt', True) == 167409079868000
