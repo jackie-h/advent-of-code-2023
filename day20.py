@@ -91,3 +91,4 @@ def move(connections, move_blocks, pulses, state):
 if __name__ == '__main__':
     assert day20('day20_test.txt', False) == 32000000
     assert day20('day20_test2.txt', False) == 11687500
+    assert day20('day20_input.txt', False) == 0
