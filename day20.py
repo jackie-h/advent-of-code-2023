@@ -32,8 +32,8 @@ def solve(lines, part2):
     if part2:
         while not rx:
             i += 1
-            print(i)
             rx, pulses = push(connections, states, part2)
+            print(i,pulses)
 
     else:
         for i in range(0, 1000):
