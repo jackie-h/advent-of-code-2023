@@ -26,23 +26,38 @@ def solve(lines, part2):
             puzzles[puzzle].append(line)
 
     for puzzle in puzzles:
-        mirrors = []
-        for i,line in enumerate(puzzle):
-            if i < len(puzzle) - 1 and line == puzzle[i+1]:
-                d = 1
-                is_mirror = True
-                while is_mirror and i-d > 0 and i+1+d < len(puzzle):
-                    is_mirror = puzzle[i-d] == puzzle[i+1+d]
-                    d += 1
+        row_mirrors = []
+        find_mirror(row_mirrors, puzzle)
 
-                if is_mirror:
-                    mirrors.append(i + 1)
+        flipped = ['']*len(puzzle[0])
+        for i in range(0,len(puzzle)):
+            for j in range(0,len(puzzle[0])):
+                flipped[j] += puzzle[i][j]
 
-        res += sum(mirrors) * 100
-        print(mirrors)
+        column_mirrors = []
+        find_mirror(column_mirrors, flipped)
+
+        puzzle_res = sum(row_mirrors) * 100 + sum(column_mirrors)
+        res += puzzle_res
+        print(row_mirrors,column_mirrors,puzzle_res)
 
 
     return res
+
+
+def find_mirror(mirrors, puzzle):
+    for i, line in enumerate(puzzle):
+        if i < len(puzzle) - 1 and line == puzzle[i + 1]:
+            d = 1
+            is_mirror = True
+            while is_mirror and i - d >= 0 and i + 1 + d < len(puzzle):
+                a = puzzle[i - d]
+                b = puzzle[i + 1 + d]
+                is_mirror = a == b
+                d += 1
+
+            if is_mirror:
+                mirrors.append(i + 1)
 
 
 if __name__ == '__main__':

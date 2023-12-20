@@ -1,1 +1,2 @@
 day 18 - geometry, inside area - shoelace/trapezoid polygon area formula and pick's theorem
+day 20 part - LCM - least common multiple
