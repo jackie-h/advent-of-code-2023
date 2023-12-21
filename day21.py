@@ -26,22 +26,31 @@ def solve(lines, part2, total_steps):
     for i in range(0,total_steps):
         new_locations = set()
         for x,y in locations:
-            if x > 0:
-                check_and_move(x - 1, y, lines, new_locations)
-            if x < len(lines) - 1:
-                check_and_move(x + 1, y, lines, new_locations)
-            if y > 0:
-                check_and_move(x, y-1, lines, new_locations)
-            if y < len(lines[0]) - 1:
-                check_and_move(x, y+1, lines, new_locations)
+            check_and_move(x - 1, y, lines, new_locations, part2)
+            check_and_move(x + 1, y, lines, new_locations, part2)
+            check_and_move(x, y - 1, lines, new_locations, part2)
+            check_and_move(x, y + 1, lines, new_locations, part2)
         locations = new_locations
 
     res = len(locations)
     return res
 
 
-def check_and_move(cx, cy, lines, new_locations):
-    if lines[cx][cy] != '#':
+def check_and_move(cx, cy, lines, new_locations, part2):
+    lx = cx
+    ly = cy
+    if cx < 0 or cx >= len(lines):
+        if part2:
+            lx = cx%len(lines)
+        else:
+            return
+    if cy < 0 or cy >= len(lines[0]):
+        if part2:
+            ly = cy%len(lines[0])
+        else:
+            return
+
+    if lines[lx][ly] != '#':
         new_locations.add((cx, cy))
 
 
@@ -51,4 +60,9 @@ if __name__ == '__main__':
 
     assert day21('day21_test.txt', True, 6) == 16
     assert day21('day21_test.txt', True, 10) == 50
+    assert day21('day21_test.txt', True, 50) == 1594
+    assert day21('day21_test.txt', True, 100) == 6536
+    assert day21('day21_test.txt', True, 500) == 167004
+    assert day21('day21_test.txt', True, 1000) == 668697
+    assert day21('day21_test.txt', True, 5000) == 16733044
 
