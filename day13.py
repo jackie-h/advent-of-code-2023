@@ -1,6 +1,3 @@
-import collections
-
-
 def day13(filename, part2):
     print('Day 13: Point of Incidence')
 
