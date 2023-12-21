@@ -28,11 +28,11 @@ def solve(lines, part2, total_steps):
         for x,y in locations:
             if x > 0:
                 check_and_move(x - 1, y, lines, new_locations)
-            if x < len(lines):
+            if x < len(lines) - 1:
                 check_and_move(x + 1, y, lines, new_locations)
             if y > 0:
                 check_and_move(x, y-1, lines, new_locations)
-            if y < len(lines[0]):
+            if y < len(lines[0]) - 1:
                 check_and_move(x, y+1, lines, new_locations)
         locations = new_locations
 
@@ -48,4 +48,7 @@ def check_and_move(cx, cy, lines, new_locations):
 if __name__ == '__main__':
     assert day21('day21_test.txt', False, 6) == 16
     assert day21('day21_input.txt', False, 64) == 3841
+
+    assert day21('day21_test.txt', True, 6) == 16
+    assert day21('day21_test.txt', True, 10) == 50
 
