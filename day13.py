@@ -62,3 +62,4 @@ def find_mirror(mirrors, puzzle):
 
 if __name__ == '__main__':
     assert day13('day13_test.txt', False) == 405
+    assert day13('day13_input.txt', False) == 31739
