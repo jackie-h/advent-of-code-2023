@@ -21,7 +21,7 @@ def solve(lines, part2):
 
     success = []
     paths = collections.deque()
-    paths.append((0,sy,[]))
+    paths.append((0,sy,set()))
     next_steps(paths, lines, success, part2)
 
     for s in success:
@@ -44,7 +44,7 @@ def next_steps(paths, lines, success, part2):
                 success.append(visited.copy())
                 print(len(visited))
             else:
-                visited.append((x,y))
+                visited.add((x,y))
 
                 if part2:
                     maybe_continue(x - 1, y, visited, paths, lines)
