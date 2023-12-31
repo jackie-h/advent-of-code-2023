@@ -49,17 +49,17 @@ def next_steps(paths, lines, success, part2):
 
                 if part2:
                     if c != '#':
-                        paths.append((x - 1, y, visited.copy()))
-                        paths.append((x + 1, y, visited.copy()))
-                        paths.append((x, y - 1, visited.copy()))
-                        paths.append((x, y + 1, visited.copy()))
+                        maybe_continue(x - 1, y, visited, paths)
+                        maybe_continue(x + 1, y, visited, paths)
+                        maybe_continue(x, y - 1, visited, paths)
+                        maybe_continue(x, y + 1, visited, paths)
 
                 else:
                     if c == '.':
-                        paths.append((x - 1, y, visited.copy()))
-                        paths.append((x + 1, y, visited.copy()))
-                        paths.append((x, y - 1, visited.copy()))
-                        paths.append((x, y + 1, visited.copy()))
+                        maybe_continue(x - 1, y, visited, paths)
+                        maybe_continue(x + 1, y, visited, paths)
+                        maybe_continue(x, y - 1, visited, paths)
+                        maybe_continue(x, y + 1, visited, paths)
                     elif c == '<':
                         paths.append((x, y - 1, visited))
                     elif c == '>':
@@ -68,6 +68,11 @@ def next_steps(paths, lines, success, part2):
                         paths.append((x - 1, y, visited))
                     elif c == 'v':
                         paths.append((x + 1, y, visited))
+
+
+def maybe_continue(x,y,visited,paths):
+    if (x, y) not in visited:
+        paths.append((x,y,visited.copy()))
 
 
 if __name__ == '__main__':
