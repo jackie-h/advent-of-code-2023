@@ -19,7 +19,7 @@ def solve(lines, part2):
     sy = lines[0].find('.')
 
     success = []
-    next_steps(0, sy, lines, [], success)
+    next_steps(0, sy, lines, [], success, part2)
 
     for s in success:
         l = len(s)
@@ -29,7 +29,7 @@ def solve(lines, part2):
     return res
 
 
-def next_steps(x, y, lines, visited, success):
+def next_steps(x, y, lines, visited, success, part2):
     if x < 0 or x >= len(lines):
         return
     elif y < 0 or y > len(lines[0]):
@@ -39,6 +39,7 @@ def next_steps(x, y, lines, visited, success):
 
     if x == len(lines) - 1 and c == '.':
         success.append(visited.copy())
+        print(len(visited))
 
     elif (x,y) in visited:
         return
@@ -46,19 +47,27 @@ def next_steps(x, y, lines, visited, success):
     if c != '#':
         visited.append((x,y))
 
-    if c == '.':
-        next_steps(x - 1, y, lines, visited.copy(), success)
-        next_steps(x + 1, y, lines, visited.copy(), success)
-        next_steps(x, y - 1, lines, visited.copy(), success)
-        next_steps(x, y + 1, lines, visited.copy(), success)
-    elif c == '<':
-        next_steps(x, y - 1, lines, visited, success)
-    elif c == '>':
-        next_steps(x, y + 1, lines, visited, success)
-    elif c == '^':
-        next_steps(x - 1, y, lines, visited, success)
-    elif c == 'v':
-        next_steps(x + 1, y, lines, visited, success)
+    if part2:
+        if c != '#':
+            next_steps(x - 1, y, lines, visited.copy(), success, part2)
+            next_steps(x + 1, y, lines, visited.copy(), success, part2)
+            next_steps(x, y - 1, lines, visited.copy(), success, part2)
+            next_steps(x, y + 1, lines, visited.copy(), success, part2)
+
+    else:
+        if c == '.':
+            next_steps(x - 1, y, lines, visited.copy(), success, part2)
+            next_steps(x + 1, y, lines, visited.copy(), success, part2)
+            next_steps(x, y - 1, lines, visited.copy(), success, part2)
+            next_steps(x, y + 1, lines, visited.copy(), success, part2)
+        elif c == '<':
+            next_steps(x, y - 1, lines, visited, success, part2)
+        elif c == '>':
+            next_steps(x, y + 1, lines, visited, success, part2)
+        elif c == '^':
+            next_steps(x - 1, y, lines, visited, success, part2)
+        elif c == 'v':
+            next_steps(x + 1, y, lines, visited, success, part2)
 
 
 if __name__ == '__main__':
@@ -66,5 +75,8 @@ if __name__ == '__main__':
 
     assert day23('day23_test.txt', False) == 94
     assert day23('day23_input.txt', False) == 2238
+
+    assert day23('day23_test.txt', True) == 154
+    #assert day23('day23_input.txt', True) == 2238
 
 
