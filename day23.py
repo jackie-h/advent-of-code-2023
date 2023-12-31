@@ -43,35 +43,33 @@ def next_steps(paths, lines, success, part2):
             if x == len(lines) - 1 and c == '.':
                 success.append(visited.copy())
                 print(len(visited))
-            elif (x,y) not in visited:
-                if c != '#':
-                    visited.append((x,y))
+            else:
+                visited.append((x,y))
 
                 if part2:
-                    if c != '#':
-                        maybe_continue(x - 1, y, visited, paths)
-                        maybe_continue(x + 1, y, visited, paths)
-                        maybe_continue(x, y - 1, visited, paths)
-                        maybe_continue(x, y + 1, visited, paths)
+                    maybe_continue(x - 1, y, visited, paths, lines)
+                    maybe_continue(x + 1, y, visited, paths, lines)
+                    maybe_continue(x, y - 1, visited, paths, lines)
+                    maybe_continue(x, y + 1, visited, paths, lines)
 
                 else:
                     if c == '.':
-                        maybe_continue(x - 1, y, visited, paths)
-                        maybe_continue(x + 1, y, visited, paths)
-                        maybe_continue(x, y - 1, visited, paths)
-                        maybe_continue(x, y + 1, visited, paths)
+                        maybe_continue(x - 1, y, visited, paths, lines)
+                        maybe_continue(x + 1, y, visited, paths, lines)
+                        maybe_continue(x, y - 1, visited, paths, lines)
+                        maybe_continue(x, y + 1, visited, paths, lines)
                     elif c == '<':
-                        paths.append((x, y - 1, visited))
+                        maybe_continue(x, y - 1, visited, paths, lines)
                     elif c == '>':
-                        paths.append((x, y + 1, visited))
+                        maybe_continue(x, y + 1, visited, paths, lines)
                     elif c == '^':
-                        paths.append((x - 1, y, visited))
+                        maybe_continue(x - 1, y, visited, paths, lines)
                     elif c == 'v':
-                        paths.append((x + 1, y, visited))
+                        maybe_continue(x + 1, y, visited, paths, lines)
 
 
-def maybe_continue(x,y,visited,paths):
-    if (x, y) not in visited:
+def maybe_continue(x, y, visited, paths, lines):
+    if (x, y) not in visited and lines[x][y] != '#':
         paths.append((x,y,visited.copy()))
 
 
