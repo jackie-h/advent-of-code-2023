@@ -16,17 +16,28 @@ def day16(filename, part2):
 def solve(lines, part2):
     res = 0
 
-    dir = (0,1)
-    start = (0,0)
-    sc = lines[0][0]
-    if sc == '\\':
-       dir = (1,0)
+    if part2:
+        for x in range(0,len(lines)):
+            res = max(res,beam((x,0), (0,1), lines))
+
+    else:
+        dir = (0, 1)
+        start = (0, 0)
+        sc = lines[0][0]
+        if sc == '\\':
+            dir = (1, 0)
+
+        res = beam(start, dir, lines)
+
+    return res
+
+
+def beam(start, dir, lines):
+    locations_visited = set()
+    visited = set()
 
     beams = deque()
     beams.append((start,dir))
-
-    visited = set()
-    locations_visited = set()
 
     while len(beams) > 0:
         location, direction = beams.popleft()
@@ -34,56 +45,53 @@ def solve(lines, part2):
         nx = location[0] + direction[0]
         ny = location[1] + direction[1]
 
-        stop = (location,direction) in visited
+        stop = (location, direction) in visited
         stop = stop or nx < 0 or nx >= len(lines)
         stop = stop or ny < 0 or ny >= len(lines[0])
 
         if not stop:
             print(location)
-            visited.add((location,direction))
+            visited.add((location, direction))
             m = lines[nx][ny]
 
             if m == '.':
-                beams.append(((nx,ny),direction))
+                beams.append(((nx, ny), direction))
             if m == '\\':
                 # 0,1 = 1,0
                 # 1,0 = 0,1
                 # 0,-1 = -1,0
                 # -1,0 = 0,-1
-                beams.append(((nx, ny), (direction[1],direction[0])))
+                beams.append(((nx, ny), (direction[1], direction[0])))
             elif m == '/':
-                #0,1 = -1,0
-                #1,0 = 0,-1
-                #0,-1 = 1,0
-                #-1,0 = 0,1
+                # 0,1 = -1,0
+                # 1,0 = 0,-1
+                # 0,-1 = 1,0
+                # -1,0 = 0,1
                 if direction[0] == 0:
-                    nd = (-direction[1],0)
+                    nd = (-direction[1], 0)
                 else:
-                    nd = (0,-direction[0])
+                    nd = (0, -direction[0])
                 beams.append(((nx, ny), nd))
             elif m == '|':
                 if direction[0] == 0:
-                    beams.append(((nx, ny), (-1,0)))
-                    beams.append(((nx, ny), (1,0)))
+                    beams.append(((nx, ny), (-1, 0)))
+                    beams.append(((nx, ny), (1, 0)))
                 else:
                     beams.append(((nx, ny), direction))
             elif m == '-':
                 if direction[1] == 0:
-                    beams.append(((nx, ny), (0,-1)))
-                    beams.append(((nx, ny), (0,1)))
+                    beams.append(((nx, ny), (0, -1)))
+                    beams.append(((nx, ny), (0, 1)))
                 else:
                     beams.append(((nx, ny), direction))
 
-    res = len(locations_visited)
-
-    for x,y in locations_visited:
-        lines[x] = lines[x][0:y] + '#' + lines[x][y+1:]
+    for x, y in locations_visited:
+        lines[x] = lines[x][0:y] + '#' + lines[x][y + 1:]
 
     for row in lines:
         print(*row, sep="")
 
-    return res
-
+    return len(locations_visited)
 
 
 if __name__ == '__main__':
