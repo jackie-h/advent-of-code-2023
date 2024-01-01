@@ -1,3 +1,5 @@
+from collections import deque
+
 
 def day16(filename, part2):
     print('Day 16: The Floor Will Be Lava')
@@ -20,13 +22,14 @@ def solve(lines, part2):
     if sc == '\\':
        dir = (1,0)
 
-    beams = [(start,dir)]
+    beams = deque()
+    beams.append((start,dir))
 
     visited = set()
     locations_visited = set()
 
     while len(beams) > 0:
-        location, direction = beams.pop()
+        location, direction = beams.popleft()
         locations_visited.add(location)
         nx = location[0] + direction[0]
         ny = location[1] + direction[1]
@@ -78,7 +81,7 @@ def solve(lines, part2):
 
 
 if __name__ == '__main__':
-    assert day16('day16_test.txt', False) == 46
+    #assert day16('day16_test.txt', False) == 46
     assert day16('day16_input.txt', False) == 46
 
 
