@@ -19,6 +19,10 @@ def solve(lines, part2):
     if part2:
         for x in range(0,len(lines)):
             res = max(res,beam((x,0), (0,1), lines))
+            res = max(res, beam((x, len(lines) - 1), (0, -1), lines))
+        for y in range(0,len(lines[0])):
+            res = max(res, beam((0, y), (1, 0), lines))
+            res = max(res, beam((len(lines) - 1, y), (-1, 0), lines))
 
     else:
         dir = (0, 1)
@@ -39,6 +43,8 @@ def beam(start, dir, lines):
     beams = deque()
     beams.append((start,dir))
 
+    print(start, dir)
+
     while len(beams) > 0:
         location, direction = beams.popleft()
         locations_visited.add(location)
@@ -50,7 +56,7 @@ def beam(start, dir, lines):
         stop = stop or ny < 0 or ny >= len(lines[0])
 
         if not stop:
-            print(location)
+            #print(location)
             visited.add((location, direction))
             m = lines[nx][ny]
 
@@ -85,11 +91,11 @@ def beam(start, dir, lines):
                 else:
                     beams.append(((nx, ny), direction))
 
-    for x, y in locations_visited:
-        lines[x] = lines[x][0:y] + '#' + lines[x][y + 1:]
-
-    for row in lines:
-        print(*row, sep="")
+    # for x, y in locations_visited:
+    #     lines[x] = lines[x][0:y] + '#' + lines[x][y + 1:]
+    #
+    # for row in lines:
+    #     print(*row, sep="")
 
     return len(locations_visited)
 
@@ -97,5 +103,7 @@ def beam(start, dir, lines):
 if __name__ == '__main__':
     assert day16('day16_test.txt', False) == 46
     assert day16('day16_input.txt', False) == 6994
+
+    assert day16('day16_test.txt', True) == 51
 
 
