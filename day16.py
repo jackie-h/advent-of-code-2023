@@ -1,5 +1,3 @@
-from operator import itemgetter
-
 
 def day16(filename, part2):
     print('Day 16: The Floor Will Be Lava')
@@ -16,11 +14,13 @@ def day16(filename, part2):
 def solve(lines, part2):
     res = 0
 
-
-    east = (0,1)
+    dir = (0,1)
     start = (0,0)
+    sc = lines[0][0]
+    if sc == '\\':
+       dir = (1,0)
 
-    beams = [(start,east)]
+    beams = [(start,dir)]
 
     visited = set()
     locations_visited = set()
@@ -37,6 +37,7 @@ def solve(lines, part2):
         stop = stop or ny < 0 or ny >= len(lines[0])
 
         if not stop:
+            print(location)
             visited.add((location,direction))
             m = lines[nx][ny]
 
