@@ -25,13 +25,7 @@ def solve(lines, part2):
             res = max(res, beam((len(lines) - 1, y), (-1, 0), lines))
 
     else:
-        dir = (0, 1)
-        start = (0, 0)
-        sc = lines[0][0]
-        if sc == '\\':
-            dir = (1, 0)
-
-        res = beam(start, dir, lines)
+        res = beam((0, 0), (0, 1), lines)
 
     return res
 
@@ -39,9 +33,13 @@ def solve(lines, part2):
 def beam(start, dir, lines):
     locations_visited = set()
     visited = set()
-
     beams = deque()
-    beams.append((start,dir))
+
+    m = lines[start[0]][start[1]]
+    start_directions = next_directions(m, dir)
+
+    for s_dir in start_directions:
+        beams.append((start,s_dir))
 
     print(start, dir)
 
@@ -60,36 +58,9 @@ def beam(start, dir, lines):
             visited.add((location, direction))
             m = lines[nx][ny]
 
-            if m == '.':
-                beams.append(((nx, ny), direction))
-            if m == '\\':
-                # 0,1 = 1,0
-                # 1,0 = 0,1
-                # 0,-1 = -1,0
-                # -1,0 = 0,-1
-                beams.append(((nx, ny), (direction[1], direction[0])))
-            elif m == '/':
-                # 0,1 = -1,0
-                # 1,0 = 0,-1
-                # 0,-1 = 1,0
-                # -1,0 = 0,1
-                if direction[0] == 0:
-                    nd = (-direction[1], 0)
-                else:
-                    nd = (0, -direction[0])
-                beams.append(((nx, ny), nd))
-            elif m == '|':
-                if direction[0] == 0:
-                    beams.append(((nx, ny), (-1, 0)))
-                    beams.append(((nx, ny), (1, 0)))
-                else:
-                    beams.append(((nx, ny), direction))
-            elif m == '-':
-                if direction[1] == 0:
-                    beams.append(((nx, ny), (0, -1)))
-                    beams.append(((nx, ny), (0, 1)))
-                else:
-                    beams.append(((nx, ny), direction))
+            directions = next_directions(m, direction)
+            for dir in directions:
+                beams.append(((nx, ny), dir))
 
     # for x, y in locations_visited:
     #     lines[x] = lines[x][0:y] + '#' + lines[x][y + 1:]
@@ -98,6 +69,37 @@ def beam(start, dir, lines):
     #     print(*row, sep="")
 
     return len(locations_visited)
+
+
+def next_directions(m, direction):
+    if m == '.':
+        return [direction]
+    if m == '\\':
+        # 0,1 = 1,0
+        # 1,0 = 0,1
+        # 0,-1 = -1,0
+        # -1,0 = 0,-1
+        return [(direction[1], direction[0])]
+    elif m == '/':
+        # 0,1 = -1,0
+        # 1,0 = 0,-1
+        # 0,-1 = 1,0
+        # -1,0 = 0,1
+        if direction[0] == 0:
+            nd = (-direction[1], 0)
+        else:
+            nd = (0, -direction[0])
+        return [nd]
+    elif m == '|':
+        if direction[0] == 0:
+            return [(-1, 0),(1, 0)]
+        else:
+            return [direction]
+    elif m == '-':
+        if direction[1] == 0:
+            return [(0, -1),(0, 1)]
+        else:
+            return [direction]
 
 
 if __name__ == '__main__':
