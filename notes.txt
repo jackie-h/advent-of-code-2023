@@ -1,2 +1,12 @@
 day 18 - geometry, inside area - shoelace/trapezoid polygon area formula and pick's theorem
 day 20 part - LCM - least common multiple
+
+fifo vs lifo: deque.popleft()
+
+you can't set a character into a string. Need to do
+    lines[x] = lines[x][0:y] + '#' + lines[x][y + 1:]
+
+printing lines
+    for row in lines:
+        print(*row, sep="")
+
