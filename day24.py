@@ -1,19 +1,19 @@
 import itertools
 
 
-def day24(filename, part2):
+def day24(filename, x_min, x_max):
     print('Day 24: Never Tell Me The Odds')
 
     res = 0
     with open(filename) as f:
         lines = [line.strip() for line in f.readlines()]
-        res = solve(lines, part2)
+        res = solve(lines, x_min, x_max)
         print(res)
 
     return res
 
 
-def solve(lines, part2):
+def solve(lines, x_min, x_max):
     res = 0
 
     coords = []
@@ -46,9 +46,11 @@ def move(p1, v1):
 
 def diff_coords(p1, p2):
     diff = (p1[0] - p2[0], p1[1] - p2[1], p1[2] - p2[2])
-    total = abs(diff[0]) + abs(diff[1]) + abs(diff[2])
+    #Just x and y for part 1
+    total = abs(diff[0]) + abs(diff[1])
     return (diff, total)
 
 
 if __name__ == '__main__':
-    assert day24('day24_test.txt', False) == 2
+    x_min, x_max = 7, 27
+    assert day24('day24_test.txt', x_min, x_max) == 2
