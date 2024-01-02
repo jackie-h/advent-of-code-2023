@@ -33,6 +33,8 @@ def solve(lines, x_min, x_max):
         bvx, bvy, bvz = v2
         ma = (avy / avx)
         mb = (bvy / bvx)
+
+        #Moving in parallel ?
         if ma == mb:
             continue
         ca = apy - (ma * apx)
