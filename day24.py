@@ -34,13 +34,14 @@ def solve(lines, x_min, x_max):
         ma = (avy / avx)
         mb = (bvy / bvx)
 
-        #Moving in parallel ?
+        #Moving in parallel so will never meet
         if ma == mb:
             continue
         ca = apy - (ma * apx)
         cb = bpy - (mb * bpx)
         x_pos = (cb - ca) / (ma - mb)
         y_pos = ma * x_pos + ca
+        #intersection needs to happen in the future
         if (x_pos < apx and avx > 0) or (x_pos > apx and avx < 0) or (x_pos < bpx and bvx > 0) or (x_pos > bpx and bvx < 0):
             continue
         if x_min <= x_pos <= x_max and x_min <= y_pos <= x_max:
