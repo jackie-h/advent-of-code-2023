@@ -74,6 +74,6 @@ def solve(lines):
 
 if __name__ == '__main__':
 
-    #assert day12('day12_test.txt') == 21
-    assert day12('day12_input.txt') == 21
+    assert day12('day12_test.txt') == 21
+    assert day12('day12_input.txt') == 7732
 
