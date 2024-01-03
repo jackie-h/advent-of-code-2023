@@ -53,7 +53,7 @@ def solve(lines):
 
                     if (i == len(row) and c_i + values[i] > len(row))\
                             or row[c_i:c_i + values[i]].find('.') > -1\
-                            or row[c_i - 1].find('#') > -1\
+                            or c_i > 0 and row[c_i - 1].find('#') > -1\
                             or (c_i + values[i] < len(row) and row[c_i + values[i]].find('#') > -1)\
                             or i == len(p) - 1 and row[c_i + values[i]:].find('#') > -1\
                             or row[prev_i + prev_v:c_i].find('#') > -1:
