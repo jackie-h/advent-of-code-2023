@@ -51,7 +51,8 @@ def solve(lines):
                     if (i == len(row) and c_i + values[i] > len(row))\
                             or row[c_i:c_i + values[i]].find('.') > -1\
                             or row[c_i - 1].find('#') > -1\
-                            or (c_i + values[i] < len(row) and row[c_i + values[i]].find('#') > -1):
+                            or (c_i + values[i] < len(row) and row[c_i + values[i]].find('#') > -1)\
+                            or i == len(p) - 1 and row[c_i + values[i]:].find('#') > -1:
                         ok = False
                         break
 
@@ -59,7 +60,7 @@ def solve(lines):
                     valid.append(p)
                     res += 1
 
-                print(p, ok)
+                #print(p, ok)
 
             print(len(valid), valid)
 
@@ -70,5 +71,5 @@ def solve(lines):
 if __name__ == '__main__':
 
     assert day12('day12_test.txt') == 21
-    #assert day12('day12_input.txt') == 21
+    assert day12('day12_input.txt') == 21
 
