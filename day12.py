@@ -19,17 +19,49 @@ def solve(lines):
         print(line)
         row,tail = line.split()
         values = list(map(int, tail.split(',')))
-        groups = len(values)
+        group_count = len(values)
         n_empty = len(row) - sum(values)
-        max_adj_empty = n_empty - (len(values) - 1)
 
+        #Only one solution
+        if n_empty == (group_count - 1):
+            res += 1
+            continue
 
-        possibles = []
-        for p in combinations(range(groups + n_empty), groups):
-            # for i,v in enumerate(p):
-            #     if [i]
+        else:
+            ranges = range(len(row) - values[len(values) - 1] + 1)#range(group_count + n_empty)
+            indexes = []
+            for r in ranges:
+                if row[r] != '.':
+                    indexes.append(r)
 
-            print(p)
+            valid = []
+            for p in combinations(indexes, group_count):
+                ok = True
+
+                for i in range(0,len(p)):
+                    c_i = p[i]
+
+                    if i > 0:
+                        prev_i = p[i-1]
+                        prev_v = values[i-1]
+                        if c_i < (prev_i + prev_v + 1):
+                            ok = False
+                            break
+
+                    if (i == len(row) and c_i + values[i] > len(row))\
+                            or line[c_i:c_i + values[i]].find('.') > -1\
+                            or line[c_i - 1].find('#') > -1\
+                            or line[c_i + values[i]].find('#') > -1:
+                        ok = False
+                        break
+
+                if ok:
+                    valid.append(p)
+                    res += 1
+
+                print(p, ok)
+
+            print(len(valid), valid)
 
 
     return res
@@ -37,5 +69,5 @@ def solve(lines):
 
 if __name__ == '__main__':
 
-    assert day12('day12_test.txt') == 374
+    assert day12('day12_test.txt') == 21
 
