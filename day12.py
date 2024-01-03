@@ -41,11 +41,13 @@ def solve(lines):
                 for i in range(0,len(p)):
                     c_i = p[i]
 
+                    prev_i = 0
+                    prev_v = 0
+
                     if i > 0:
                         prev_i = p[i-1]
                         prev_v = values[i-1]
-                        if c_i < (prev_i + prev_v + 1)\
-                                or row[prev_i + prev_v:c_i].find('#') > -1:
+                        if c_i < (prev_i + prev_v + 1):
                             ok = False
                             break
 
@@ -53,7 +55,8 @@ def solve(lines):
                             or row[c_i:c_i + values[i]].find('.') > -1\
                             or row[c_i - 1].find('#') > -1\
                             or (c_i + values[i] < len(row) and row[c_i + values[i]].find('#') > -1)\
-                            or i == len(p) - 1 and row[c_i + values[i]:].find('#') > -1:
+                            or i == len(p) - 1 and row[c_i + values[i]:].find('#') > -1\
+                            or row[prev_i + prev_v:c_i].find('#') > -1:
                         ok = False
                         break
 
