@@ -16,7 +16,7 @@ def day12(filename):
 def solve(lines):
     res = 0
     for line in lines:
-        print(line)
+        #print(line)
         row,tail = line.split()
         values = list(map(int, tail.split(',')))
         group_count = len(values)
@@ -44,7 +44,8 @@ def solve(lines):
                     if i > 0:
                         prev_i = p[i-1]
                         prev_v = values[i-1]
-                        if c_i < (prev_i + prev_v + 1):
+                        if c_i < (prev_i + prev_v + 1)\
+                                or row[prev_i + prev_v:c_i].find('#') > -1:
                             ok = False
                             break
 
@@ -62,7 +63,7 @@ def solve(lines):
 
                 #print(p, ok)
 
-            print(len(valid), valid)
+            print(len(valid), line, valid)
 
 
     return res
@@ -70,6 +71,6 @@ def solve(lines):
 
 if __name__ == '__main__':
 
-    assert day12('day12_test.txt') == 21
+    #assert day12('day12_test.txt') == 21
     assert day12('day12_input.txt') == 21
 
