@@ -14,7 +14,7 @@ def day17(filename, min_dist, max_dist):
 
 
 def solve(lines, min_dist, max_dist):
-    q = [(0, (0, 0), (0, 1))]  # cost, location, direction
+    q = [(0, (0, 0), (0, 0))]  # cost, location, direction
     visited = set()
     costs = {}
 
@@ -45,7 +45,7 @@ def solve(lines, min_dist, max_dist):
                         if costs.get((nx, ny, direction), 1e100) <= nc:
                             continue
                         costs[(nx, ny, direction)] = nc
-                        #print(nx,ny,direction,nc)
+                        print(nx,ny,direction,nc)
                         heappush(q, (nc, (nx, ny), direction))
 
 
@@ -63,8 +63,13 @@ def next_directions(direction):
         return [s, n]
     elif direction == w:
         return [s, n]
+    else:
+        return [e,s,n,w]
 
 
 if __name__ == '__main__':
     assert day17('day17_test.txt', 1, 3) == 102
     assert day17('day17_input.txt', 1, 3) == 1039
+
+    assert day17('day17_test.txt', 4, 10) == 94
+    assert day17('day17_input.txt', 4, 10) == 1201
