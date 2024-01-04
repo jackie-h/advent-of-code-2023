@@ -10,3 +10,6 @@ printing lines
     for row in lines:
         print(*row, sep="")
 
+dynamic programming - essentially cache of recursion, useful for repeated grids
+
+priority q in python is heapq, useful for Dijkstra's algorithm

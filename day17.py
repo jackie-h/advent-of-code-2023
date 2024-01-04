@@ -1,112 +1,69 @@
-import collections
-import sys
+from heapq import heappop, heappush
 
 
-def day17(filename, part2):
+def day17(filename, min_dist, max_dist):
     print('Day 17: Clumsy Crucible')
 
     res = 0
     with open(filename) as f:
         lines = [line.strip() for line in f.readlines()]
-        res = solve(lines, part2)
+        res = solve(lines, min_dist, max_dist)
         print(res)
 
     return res
 
 
-def solve(lines, part2):
+def solve(lines, min_dist, max_dist):
+    q = [(0, (0, 0), (0, 1))]  # cost, location, direction
+    visited = set()
+    costs = {}
 
-    paths = collections.deque()
-    success = []
+    while q:
+        cost, location, prev_direction = heappop(q)
+        x, y = location
 
-    start = (0,0)
+        # We are at the goal
+        if x == len(lines) - 1 and y == len(lines[0]) - 1:
+            return cost
 
-    best_total = find_minimal_path(start,(0,1),set(),lines)
+        if (location, prev_direction) not in visited:
+            visited.add((location, prev_direction))
 
-    # paths.append((start, (0, 1), 1, set(), 0))
-    # paths.append((start, (1, 0), 1, set(), 0))
-    #
-    # best_total = len(lines) * 9 * 2
-    #
-    # while len(paths) > 0:
-    #     location, direction, direction_count, visited, total = paths.pop()
-    #
-    #     nx = location[0] + direction[0]
-    #     ny = location[1] + direction[1]
-    #
-    #     if (location, direction) not in visited \
-    #             and 0 <= nx < len(lines) and 0 <= ny < len(lines[0]):
-    #
-    #         #print(location)
-    #         visited.add((location, direction))
-    #
-    #         if nx == len(lines) - 1 and ny == len(lines[0]) - 1:
-    #             success.append(visited.copy())
-    #             best_total = min(total, best_total)
-    #             print('Success',best_total)
-    #         else:
-    #             total += int(lines[location[0]][location[1]])
-    #             if total < best_total:
-    #                 direction_count,directions = next_directions(direction_count, direction)
-    #                 for dir in directions:
-    #                     paths.append(((nx, ny), dir, direction_count, visited.copy(), total))
-    #             #else:
-    #                 #print('stop')
+            directions = next_directions(prev_direction)
+            for direction in directions:
+                cost_increase = 0
+                print(direction)
 
-    return best_total
+                for distance in range(1, max_dist + 1):
+                    nx = x + direction[0] * distance
+                    ny = y + direction[1] * distance
+                    if 0 <= nx < len(lines) and 0 <= ny < len(lines[0]):
+                        cost_increase += int(lines[nx][ny])
+                        if distance < min_dist:
+                            continue
+                        nc = cost + cost_increase
+                        if costs.get((nx, ny, direction), 1e100) <= nc:
+                            continue
+                        costs[(nx, ny, direction)] = nc
+                        print(nx,ny,direction,nc)
+                        heappush(q, (nc, (nx, ny), direction))
 
 
-def find_minimal_path(location, direction, cache, lines):
-    nx = location[0] + direction[0]
-    ny = location[1] + direction[1]
+def next_directions(direction):
+    n = (-1, 0)
+    s = (1, 0)
+    e = (0, 1)
+    w = (0, -1)
 
-    if 0 <= nx < len(lines) and 0 <= ny < len(lines[0]):
-        total = int(lines[nx][ny])
-        if nx == len(lines) - 1 and ny == len(lines[0]) - 1:
-            print('Success', total)
-            return total
-        elif ((nx,ny), direction) in cache:
-            return cache[((nx,ny), direction)]
-        else:
-            worst_case = (len(lines) - nx) *9 + (len(lines[0]) - ny) *9
-            direction_count, directions = next_directions(1, direction)
-            pt = 0
-            for dir in directions:
-                t = find_minimal_path((nx,ny), dir, cache, lines)
-                print(t)
-                if t is not None:
-                    if pt == 0:
-                        pt = t
-                    else:
-                        pt = min(pt, t)
-            total += pt
-            cache[((nx, ny), direction)] = total
-            return total
-
-
-def next_directions(direction_count, direction):
-    n = (-1,0)
-    s = (1,0)
-    e = (0,1)
-    w = (0,-1)
-    directions = []
-
-    if direction_count >= 3:
-        direction_count = 1
-    else:
-        directions.append(direction)
-        direction_count = direction_count + 1
-
-    if direction == n or direction == s:
-        directions.append(e)
-        directions.append(w)
-    elif direction == e or direction == w:
-        directions.append(n)
-        directions.append(s)
-
-    return direction_count,directions
+    if direction == n:
+        return [e,w]
+    elif direction == s:
+        return [e, w]
+    elif direction == e:
+        return [s, n]
+    elif direction == w:
+        return [s, n]
 
 
 if __name__ == '__main__':
-    sys.setrecursionlimit(10000)
-    assert day17('day17_test.txt', False) == 102
+    assert day17('day17_test.txt', 1, 3) == 102
