@@ -34,21 +34,21 @@ def solve(lines, part2):
         if (location, direction) not in visited \
                 and 0 <= nx < len(lines) and 0 <= ny < len(lines[0]):
 
-            print(location)
+            #print(location)
             visited.add((location, direction))
 
             if nx == len(lines) - 1 and ny == len(lines[0]) - 1:
                 success.append(visited.copy())
-                print('Success')
                 best_total = min(total, best_total)
+                print('Success',best_total)
             else:
                 total += int(lines[location[0]][location[1]])
                 if total < best_total:
                     direction_count,directions = next_directions(direction_count, direction)
                     for dir in directions:
                         paths.append(((nx, ny), dir, direction_count, visited.copy(), total))
-                else:
-                    print('stop')
+                #else:
+                    #print('stop')
 
     return best_total
 
