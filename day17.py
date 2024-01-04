@@ -31,33 +31,24 @@ def solve(lines, part2):
         nx = location[0] + direction[0]
         ny = location[1] + direction[1]
 
-        stop = (location, direction) in visited
-        stop = stop or nx < 0 or nx >= len(lines)
-        stop = stop or ny < 0 or ny >= len(lines[0])
+        if (location, direction) not in visited \
+                and 0 <= nx < len(lines) and 0 <= ny < len(lines[0]):
 
-        if nx == len(lines) - 1 and ny == len(lines[0]) - 1:
-            success.append(visited.copy())
-            print('Success')
-            stop = True
-            best_total = min(total, best_total)
-
-        if not stop:
             print(location)
             visited.add((location, direction))
 
-            total += int(lines[location[0]][location[1]])
-            if total < best_total:
-                direction_count,directions = next_directions(direction_count, direction)
-                for dir in directions:
-                    paths.append(((nx, ny), dir, direction_count, visited.copy(), total))
+            if nx == len(lines) - 1 and ny == len(lines[0]) - 1:
+                success.append(visited.copy())
+                print('Success')
+                best_total = min(total, best_total)
             else:
-                print('stop')
-
-    # for x, y in locations_visited:
-    #     lines[x] = lines[x][0:y] + '#' + lines[x][y + 1:]
-    #
-    # for row in lines:
-    #     print(*row, sep="")
+                total += int(lines[location[0]][location[1]])
+                if total < best_total:
+                    direction_count,directions = next_directions(direction_count, direction)
+                    for dir in directions:
+                        paths.append(((nx, ny), dir, direction_count, visited.copy(), total))
+                else:
+                    print('stop')
 
     return best_total
 
