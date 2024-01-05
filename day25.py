@@ -1,5 +1,5 @@
-from operator import itemgetter
-
+import collections
+from itertools import combinations
 
 def day25(filename, part2):
     print('Day 25: Snowverload')
@@ -15,19 +15,69 @@ def day25(filename, part2):
 
 def solve(lines, part2):
     res = 0
-
-    input = {}
+    connections = {}
+    pairs = []
 
     for line in lines:
-        head,tail = line.split(":")
+        head,tail = line.split(": ")
         t = tail.split(" ")
-        input[head] = t
+        c = connections.get(head)
+        if c is None:
+            connections[head] = t
+        else:
+            c.extend(t)
+
+        for v in t:
+            pairs.append((head, v))
+            c = connections.get(v)
+            if c is None:
+                connections[v] = [head]
+            else:
+                c.append(head)
+
+    for c in combinations(pairs, 3):
+        print(c)
+        res = count_cycles(connections, c, 2)
+        if res > 1:
+            break
 
     return res
 
 
+def count_cycles(connections:dict, disconnected, target_cycles):
+    keys:set = set(connections.keys())
+    cycles = 0
+    groups = []
+
+    while len(keys) > 0:
+        cycles += 1
+        if cycles > target_cycles:
+            break
+        q = collections.deque()
+        q.append(next(iter(keys)))
+
+        visited = set()
+
+        while q:
+            k = q.popleft()
+            if k not in visited:
+                vals = connections.get(k)
+                visited.add(k)
+                keys.remove(k)
+                for v in vals:
+                    if (k,v) not in disconnected and (v,k) not in disconnected:
+                            q.append(v)
+        groups.append(visited)
+
+    res = 1
+    if cycles == target_cycles:
+        for g in groups:
+            res = res*len(g)
+
+    return res
+
 
 if __name__ == '__main__':
-    assert day25('day25_test.txt', False) == 5
+    assert day25('day25_test.txt', False) == 54
 
 
