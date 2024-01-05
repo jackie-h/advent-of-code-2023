@@ -35,9 +35,11 @@ def solve(lines, part2):
             else:
                 c.append(head)
 
+    lc = 0
     for c in combinations(pairs, 3):
-        print(c)
-        res = count_cycles(connections, c, 2)
+        lc += 1
+        res = count_cycles(connections, set(c), 2)
+        print(lc, c, res)
         if res > 1:
             break
 
@@ -79,5 +81,6 @@ def count_cycles(connections:dict, disconnected, target_cycles):
 
 if __name__ == '__main__':
     assert day25('day25_test.txt', False) == 54
+    assert day25('day25_input.txt', False) == 0
 
 
