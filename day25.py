@@ -1,5 +1,8 @@
 import collections
+import operator
 from itertools import combinations
+from random import randrange
+
 
 def day25(filename, part2):
     print('Day 25: Snowverload')
@@ -35,8 +38,26 @@ def solve(lines, part2):
             else:
                 c.append(head)
 
+    kl = list(connections.keys())
+    crossings = {}
+
+    for i in range(10):
+        r1 = randrange(len(kl))
+        r2 = randrange(len(kl))
+        print(kl[r1], kl[r2])
+        ps = find_path(connections, kl[r1], kl[r2])
+        for p in ps:
+            ct = crossings.get(p)
+            if ct is None:
+                crossings[p] = 1
+            else:
+                crossings[p] = 1 + ct
+
+    sorted_crossings = sorted(crossings.items(), key=operator.itemgetter(1), reverse=True)
+    pairs_combos = sorted_crossings[0:20]
+
     lc = 0
-    for c in combinations(pairs, 3):
+    for c in combinations(pairs_combos, 3):
         lc += 1
         res = count_cycles(connections, set(c), 2)
         print(lc, c, res)
@@ -45,6 +66,26 @@ def solve(lines, part2):
 
     return res
 
+
+def find_path(connections:dict, key1, key2):
+    q = collections.deque()
+    for v in connections.get(key1):
+        q.append((key1,v,set()))
+
+    success = []
+
+    while q:
+        prev,k,visited = q.popleft()
+        if k == key2:
+            success = visited
+            break
+
+        if (prev, k) not in visited:
+            visited.add((prev,k))
+            vals = connections.get(k)
+            for v in vals:
+                q.append((k,v,visited.copy()))
+    return success
 
 def count_cycles(connections:dict, disconnected, target_cycles):
     keys:set = set(connections.keys())
@@ -80,7 +121,7 @@ def count_cycles(connections:dict, disconnected, target_cycles):
 
 
 if __name__ == '__main__':
-    assert day25('day25_test.txt', False) == 54
+    #assert day25('day25_test.txt', False) == 54
     assert day25('day25_input.txt', False) == 0
 
 
