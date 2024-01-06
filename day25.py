@@ -115,6 +115,7 @@ def count_cycles(connections:dict, disconnected, target_cycles):
 
 
 if __name__ == '__main__':
+    # ('jqt', 'nvd'), ('cmg', 'bvb'), ('pzl', 'hfx')
     assert day25('day25_test.txt', False) == 54
     #assert day25('day25_input.txt', False) == 0
 
