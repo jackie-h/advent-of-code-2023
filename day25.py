@@ -22,22 +22,30 @@ def solve(lines, part2):
     pairs = []
 
     for line in lines:
-        head,tail = line.split(": ")
+        head, tail = line.split(": ")
         t = tail.split(" ")
         for v in t:
             pairs.append((head, v))
             connections[v].add(head)
             connections[head].add(v)
 
-    #pairs_combos = find_most_popular_connections(connections)
+    # pairs_combos = find_most_popular_connections(connections)
 
-    lc = 0
-    for c in combinations(pairs, 3):
-        lc += 1
-        res = count_cycles(connections, set(c), 2)
-        print(lc, c, res)
-        if res > 1:
-            break
+    # lc = 0
+    # for c in combinations(pairs, 3):
+    #     lc += 1
+    #     res = count_cycles(connections, set(c), 2)
+    #     print(lc, c, res)
+    #     if res > 1:
+    #         break
+
+    keys = set(connections)
+    count = lambda v: len(connections[v] - keys)
+
+    while sum(map(count, keys)) != 3:
+        keys.remove(max(keys, key=count))
+
+    res = len(keys) * len(set(connections) - keys)
 
     return res
 
@@ -61,28 +69,29 @@ def find_most_popular_connections(connections):
     return pairs_combos
 
 
-def find_path(connections:dict, key1, key2):
+def find_path(connections: dict, key1, key2):
     q = collections.deque()
     for v in connections.get(key1):
-        q.append((key1,v,set()))
+        q.append((key1, v, set()))
 
     success = []
 
     while q:
-        prev,k,visited = q.popleft()
+        prev, k, visited = q.popleft()
         if k == key2:
             success = visited
             break
 
         if (prev, k) not in visited:
-            visited.add((prev,k))
+            visited.add((prev, k))
             vals = connections.get(k)
             for v in vals:
-                q.append((k,v,visited.copy()))
+                q.append((k, v, visited.copy()))
     return success
 
-def count_cycles(connections:dict, disconnected, target_cycles):
-    keys:set = set(connections.keys())
+
+def count_cycles(connections: dict, disconnected, target_cycles):
+    keys: set = set(connections.keys())
     cycles = 0
     groups = []
 
@@ -102,14 +111,14 @@ def count_cycles(connections:dict, disconnected, target_cycles):
                 visited.add(k)
                 keys.remove(k)
                 for v in vals:
-                    if (k,v) not in disconnected and (v,k) not in disconnected:
-                            q.append(v)
+                    if (k, v) not in disconnected and (v, k) not in disconnected:
+                        q.append(v)
         groups.append(visited)
 
     res = 1
     if cycles == target_cycles:
         for g in groups:
-            res = res*len(g)
+            res = res * len(g)
 
     return res
 
@@ -117,6 +126,4 @@ def count_cycles(connections:dict, disconnected, target_cycles):
 if __name__ == '__main__':
     # ('jqt', 'nvd'), ('cmg', 'bvb'), ('pzl', 'hfx')
     assert day25('day25_test.txt', False) == 54
-    #assert day25('day25_input.txt', False) == 0
-
-
+    assert day25('day25_input.txt', False) == 583632
