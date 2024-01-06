@@ -18,29 +18,33 @@ def day25(filename, part2):
 
 def solve(lines, part2):
     res = 0
-    connections = {}
+    connections = collections.defaultdict(set)
     pairs = []
 
     for line in lines:
         head,tail = line.split(": ")
         t = tail.split(" ")
-        c = connections.get(head)
-        if c is None:
-            connections[head] = t
-        else:
-            c.extend(t)
-
         for v in t:
             pairs.append((head, v))
-            c = connections.get(v)
-            if c is None:
-                connections[v] = [head]
-            else:
-                c.append(head)
+            connections[v].add(head)
+            connections[head].add(v)
 
+    #pairs_combos = find_most_popular_connections(connections)
+
+    lc = 0
+    for c in combinations(pairs, 3):
+        lc += 1
+        res = count_cycles(connections, set(c), 2)
+        print(lc, c, res)
+        if res > 1:
+            break
+
+    return res
+
+
+def find_most_popular_connections(connections):
     kl = list(connections.keys())
     crossings = {}
-
     for i in range(10):
         r1 = randrange(len(kl))
         r2 = randrange(len(kl))
@@ -52,19 +56,9 @@ def solve(lines, part2):
                 crossings[p] = 1
             else:
                 crossings[p] = 1 + ct
-
     sorted_crossings = sorted(crossings.items(), key=operator.itemgetter(1), reverse=True)
     pairs_combos = sorted_crossings[0:20]
-
-    lc = 0
-    for c in combinations(pairs_combos, 3):
-        lc += 1
-        res = count_cycles(connections, set(c), 2)
-        print(lc, c, res)
-        if res > 1:
-            break
-
-    return res
+    return pairs_combos
 
 
 def find_path(connections:dict, key1, key2):
@@ -121,7 +115,7 @@ def count_cycles(connections:dict, disconnected, target_cycles):
 
 
 if __name__ == '__main__':
-    #assert day25('day25_test.txt', False) == 54
-    assert day25('day25_input.txt', False) == 0
+    assert day25('day25_test.txt', False) == 54
+    #assert day25('day25_input.txt', False) == 0
 
 
