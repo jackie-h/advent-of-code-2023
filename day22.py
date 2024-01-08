@@ -25,7 +25,9 @@ def solve(lines, part2):
         coords[int(z)].add(((int(x), int(y), int(z)), (int(a), int(b), int(c))))
 
     sorted(coords, reverse=True)
-    settle(coords)
+    new_coords = settle(coords)
+
+    res = can_remove(new_coords)
 
     return res
 
@@ -56,6 +58,47 @@ def settle(coords):
     return new_coords
 
 
+def can_remove(coords):
+    count = 0
+    bf,bv = 0,[]
+
+    support_counts = {}
+
+    keys = list(coords.keys())
+    for k in reversed(keys):
+        below_k = k - 1
+        if k > 0:
+            for block in coords[k]:
+                support_count = 0
+                for c in coords[below_k]:
+                    overlap = x_y_overlap(block, c)
+                    print('supporting', block, c, overlap)
+                    if overlap:
+                        support_count += 1
+                    if support_count >= 2:
+                        break
+                print('supporting count',block, support_count, support_count == 0 or support_count >= 2)
+                support_counts[block] = support_count
+
+    for k,v in coords.items():
+        above_k = k + 1
+        for block in v:
+            is_supporting = False
+            for c in coords[above_k]:
+                overlap = x_y_overlap(block, c)
+                print('supporting', block, c, overlap)
+                if overlap:
+                    supports = support_counts[c]
+                    is_supporting = supports == 1
+                if is_supporting:
+                    break
+            print('can remove',block, not is_supporting)
+            if not is_supporting:
+                count += 1
+
+    return count
+
+
 def x_y_overlap(block1, block2):
     b1_x1 = block1[0][0]
     b1_x2 = block1[1][0]
@@ -74,3 +117,4 @@ def x_y_overlap(block1, block2):
 
 if __name__ == '__main__':
     assert day22('day22_test.txt', False) == 5
+    #assert day22('day22_input.txt', False) == 5
