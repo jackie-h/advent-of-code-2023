@@ -44,9 +44,9 @@ def settle(coords):
                 for c in new_coords_by_tz[tk]:
                     overlap = x_y_overlap(block, c)
                     print('overlap',block,c,overlap)
-                    clear = not overlap
-                    if not clear:
+                    if overlap:
                         new_bz = max(new_bz,c[1][2] + 1)
+                    clear = clear and not overlap
 
             new_c = ((block[0][0], block[0][1],new_bz), (block[1][0], block[1][1], new_bz + (block[1][2] - block[0][2])))
             print(block,new_c,new_bz)
@@ -122,4 +122,5 @@ def x_y_overlap(block1, block2):
 if __name__ == '__main__':
     assert day22('day22_test.txt', False) == 5
     assert day22('day22_test2.txt', False) == 1
-    #assert day22('day22_input.txt', False) == 5
+    #Too high - 571
+    assert day22('day22_input.txt', False) == 5
