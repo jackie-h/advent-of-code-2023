@@ -81,9 +81,9 @@ def can_remove(coords_by_bz, coords_by_tz):
 
     keys = sorted(list(coords_by_bz.keys()))
     for k in keys:
-        above_k = k + 1
         for block in coords_by_bz[k]:
             is_supporting = False
+            above_k = block[1][2] + 1
             for c in coords_by_bz[above_k]:
                 overlap = x_y_overlap(block, c)
                 print('supporting', block, c, overlap)
