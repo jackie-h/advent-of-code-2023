@@ -34,8 +34,9 @@ def settle(coords):
     prev_lk = 1
     new_coords_by_tz = defaultdict(set)
     new_coords_by_bz = defaultdict(set)
-    for k,v in coords.items():
-        for block in v:
+    keys = sorted(coords.keys())
+    for k in keys:
+        for block in coords.get(k):
             new_bz = block[0][2]
             clear = True
             while clear and new_bz != 1:
@@ -122,5 +123,4 @@ def x_y_overlap(block1, block2):
 if __name__ == '__main__':
     assert day22('day22_test.txt', False) == 5
     assert day22('day22_test2.txt', False) == 1
-    #Too high - 571
-    assert day22('day22_input.txt', False) == 5
+    assert day22('day22_input.txt', False) == 426
