@@ -1,3 +1,4 @@
+import collections
 from collections import defaultdict
 
 def day22(filename, part2):
@@ -22,53 +23,53 @@ def solve(lines, part2):
         a, b, c = tail.split(",")
         coords[int(z)].add(((int(x), int(y), int(z)), (int(a), int(b), int(c))))
 
-    sorted(coords, reverse=True)
-    new_coords = settle(coords)
 
-    res = can_remove(new_coords)
+    new_coords_by_bz,new_coords_by_tz = settle(coords)
+
+    res = can_remove(new_coords_by_bz,new_coords_by_tz)
 
     return res
 
 def settle(coords):
     prev_lk = 1
-    new_coords = defaultdict(set)
+    new_coords_by_tz = defaultdict(set)
+    new_coords_by_bz = defaultdict(set)
     for k,v in coords.items():
         for block in v:
             new_bz = block[0][2]
             clear = True
             while clear and new_bz != 1:
-                tk = min(prev_lk, new_bz - 1)
+                tk = new_bz - 1
                 new_bz = tk
-                for c in new_coords[tk]:
+                for c in new_coords_by_tz[tk]:
                     overlap = x_y_overlap(block, c)
                     print('overlap',block,c,overlap)
                     clear = not overlap
                     if not clear:
                         new_bz = max(new_bz,c[1][2] + 1)
 
-            diff = k - new_bz
-            new_c = ((block[0][0], block[0][1],new_bz), (block[1][0], block[1][1], block[1][2] - diff))
-            print(block,new_c,new_bz,diff)
-            new_coords[new_bz].add(new_c)
+            new_c = ((block[0][0], block[0][1],new_bz), (block[1][0], block[1][1], new_bz + (block[1][2] - block[0][2])))
+            print(block,new_c,new_bz)
+            new_coords_by_tz[new_c[1][2]].add(new_c)
+            new_coords_by_bz[new_c[0][2]].add(new_c)
         prev_lk = k
 
+    return new_coords_by_bz, new_coords_by_tz
 
-    return new_coords
 
-
-def can_remove(coords):
+def can_remove(coords_by_bz, coords_by_tz):
     count = 0
     bf,bv = 0,[]
 
     support_counts = {}
 
-    keys = list(coords.keys())
+    keys = sorted(list(coords_by_tz.keys()))
     for k in reversed(keys):
-        below_k = k - 1
-        if k > 0:
-            for block in coords[k]:
+        if k > 1:
+            for block in coords_by_tz[k]:
+                below_k = block[0][2] - 1
                 support_count = 0
-                for c in coords[below_k]:
+                for c in coords_by_tz[below_k]:
                     overlap = x_y_overlap(block, c)
                     print('supporting', block, c, overlap)
                     if overlap:
@@ -78,12 +79,12 @@ def can_remove(coords):
                 print('supporting count',block, support_count, support_count == 0 or support_count >= 2)
                 support_counts[block] = support_count
 
-    keys = list(coords.keys())
+    keys = sorted(list(coords_by_bz.keys()))
     for k in keys:
         above_k = k + 1
-        for block in coords[k]:
+        for block in coords_by_bz[k]:
             is_supporting = False
-            for c in coords[above_k]:
+            for c in coords_by_bz[above_k]:
                 overlap = x_y_overlap(block, c)
                 print('supporting', block, c, overlap)
                 if overlap:
