@@ -109,7 +109,9 @@ def can_remove(coords_by_bz, coords_by_tz, part2):
                 if block not in safe_to_disintegrate:
                     b_fall_set = set()
                     q = set()
-                    q.update(supporting.get(block))
+                    for c in supporting.get(block):
+                        if len(supported_by.get(c)) == 1:
+                            q.add(c)
                     while q:
                         n = q.pop()
                         b_fall_set.add(n)
@@ -118,6 +120,7 @@ def can_remove(coords_by_bz, coords_by_tz, part2):
                             if len(cs) < 2 or cs.issubset(b_fall_set):
                                 q.add(c)
                     fall_count += len(b_fall_set)
+                    print(block,len(b_fall_set))
 
         return fall_count
     else:
@@ -150,3 +153,4 @@ if __name__ == '__main__':
     # assert day22('day22_input.txt', False) == 426
 
     assert day22('day22_test.txt', True) == 7
+    assert day22('day22_input.txt', True) == 61920
