@@ -147,4 +147,4 @@ def get_value(input, values):
 if __name__ == '__main__':
     assert day5('day5_test.txt') == (35, 46)
 
-    assert day5('day5_input.txt') == 403695602
+    assert day5('day5_input.txt') == (403695602, 0)
