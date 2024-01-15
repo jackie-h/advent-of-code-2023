@@ -44,13 +44,13 @@ def settle(coords):
                 new_bz = tk
                 for c in new_coords_by_tz[tk]:
                     overlap = x_y_overlap(block, c)
-                    print('overlap', block, c, overlap)
+                    #print('overlap', block, c, overlap)
                     if overlap:
                         new_bz = max(new_bz, c[1][2] + 1)
                     clear = clear and not overlap
 
             new_c = ((block[0][0], block[0][1],new_bz), (block[1][0], block[1][1], new_bz + (block[1][2] - block[0][2])))
-            print(block,new_c,new_bz)
+            #print(block,new_c,new_bz)
             new_coords_by_tz[new_c[1][2]].add(new_c)
             new_coords_by_bz[new_c[0][2]].add(new_c)
         prev_lk = k
@@ -73,14 +73,12 @@ def can_remove(coords_by_bz, coords_by_tz, part2):
                 support_count = 0
                 for c in coords_by_tz[below_k]:
                     overlap = x_y_overlap(block, c)
-                    print('supporting', block, c, overlap)
+                    #print('supporting', block, c, overlap)
                     if overlap:
                         support_count += 1
                         supporting[c].add(block)
                         supported_by[block].add(c)
-                    if support_count >= 2:
-                        break
-                print('supporting count', block, support_count, support_count == 0 or support_count >= 2)
+                #print('supporting count', block, support_count, support_count == 0 or support_count >= 2)
                 support_counts[block] = support_count
 
     keys = sorted(list(coords_by_bz.keys()))
@@ -91,13 +89,13 @@ def can_remove(coords_by_bz, coords_by_tz, part2):
             above_k = block[1][2] + 1
             for c in coords_by_bz[above_k]:
                 overlap = x_y_overlap(block, c)
-                print('supporting', block, c, overlap)
+                #print('supporting', block, c, overlap)
                 if overlap:
                     supports = support_counts[c]
                     is_supporting = supports == 1
                 if is_supporting:
                     break
-            print('can remove', block, not is_supporting)
+            #print('can remove', block, not is_supporting)
             if not is_supporting:
                 count += 1
                 safe_to_disintegrate.add(block)
@@ -120,7 +118,7 @@ def can_remove(coords_by_bz, coords_by_tz, part2):
                             if len(cs) < 2 or cs.issubset(b_fall_set):
                                 q.add(c)
                     fall_count += len(b_fall_set)
-                    print(block,len(b_fall_set))
+                    #print(block,'=',len(b_fall_set))
 
         return fall_count
     else:
@@ -148,9 +146,9 @@ def x_y_overlap(block1, block2):
 
 
 if __name__ == '__main__':
-    # assert day22('day22_test.txt', False) == 5
-    # assert day22('day22_test2.txt', False) == 1
-    # assert day22('day22_input.txt', False) == 426
+    assert day22('day22_test.txt', False) == 5
+    assert day22('day22_test2.txt', False) == 1
+    assert day22('day22_input.txt', False) == 426
 
     assert day22('day22_test.txt', True) == 7
     assert day22('day22_input.txt', True) == 61920
