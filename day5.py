@@ -106,14 +106,15 @@ def get_value_ranges(input_ranges, values):
 
         print('intersected=', intersected)
         # find remaining gaps if exist
-        remaining = [(start,end)]
+        remaining = [(start, incr)]
         for i1 in intersected:
             new_r = []
             for a in remaining:
-                diffs = range_diff(a, i1)
+                ar = (a[0], a[0]+a[1])
+                diffs = range_diff(ar, i1)
                 print(diffs)
                 for d in diffs:
-                    new_r.append((d[0],d[1] - d[0]))
+                    new_r.append((d[0], d[1] - d[0]))
             remaining = new_r
 
         valid_ranges.extend(remaining)
@@ -153,7 +154,7 @@ def get_value(input, values):
 
 
 if __name__ == '__main__':
-    #assert day5('day5_test.txt', False) == 35
-    #assert day5('day5_test.txt', True) == 46
-    #assert day5('day5_input.txt', False) == 403695602
-    assert day5('day5_input.txt', True) == 0
+    assert day5('day5_test.txt', False) == 35
+    assert day5('day5_test.txt', True) == 46
+    assert day5('day5_input.txt', False) == 403695602
+    assert day5('day5_input.txt', True) == 219529182
