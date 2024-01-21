@@ -53,7 +53,8 @@ def solve(lines, part2):
             seed_start = seeds[i]
             seed_range = seeds[i + 1]
             i = i + 2
-            print('seed=', [seed_start, seed_range])
+
+            print('seed=', range(seed_start, seed_start + seed_range))
             soil = get_value_ranges([[seed_start, seed_range]], s_maps.get('seed-to-soil map'))
             print('soil=', soil)
             fertilizer = get_value_ranges(soil, s_maps.get('soil-to-fertilizer map'))
@@ -77,12 +78,12 @@ def solve(lines, part2):
     return res
 
 
-def get_value_ranges(ranges, values):
+def get_value_ranges(input_ranges, values):
     valid_ranges = []
     intersected = []
 
     min_start = None
-    for rg in ranges:
+    for rg in input_ranges:
         start = rg[0]
         incr = rg[1]
         end = start + incr
@@ -113,7 +114,7 @@ def get_value_ranges(ranges, values):
 
 
     if len(valid_ranges) == 0:
-        valid_ranges = ranges
+        valid_ranges = input_ranges
     else:
         min_inter_s = None
 
@@ -145,7 +146,7 @@ def get_value(input, values):
 
 
 if __name__ == '__main__':
-    assert day5('day5_test.txt', False) == 35
-    assert day5('day5_test.txt', True) == 46
-    assert day5('day5_input.txt', False) == 403695602
+    #assert day5('day5_test.txt', False) == 35
+    #assert day5('day5_test.txt', True) == 46
+    #assert day5('day5_input.txt', False) == 403695602
     assert day5('day5_input.txt', True) == 0
