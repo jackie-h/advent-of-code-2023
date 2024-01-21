@@ -1,17 +1,16 @@
-def day5(filename):
+def day5(filename, part2):
     print('Day 5: If You Give A Seed A Fertilizer')
 
     res = 0
     with open(filename) as f:
         lines = [line.strip() for line in f.readlines()]
-        res = solve(lines)
+        res = solve(lines, part2)
         print(res)
     return res
 
 
-def solve(lines):
+def solve(lines, part2):
     res = None
-    res2 = None
 
     s_maps = {}
     seeds = []
@@ -32,49 +31,50 @@ def solve(lines):
     print('seeds', seeds)
     print('maps', s_maps)
 
-    for seed in seeds:
-        soil = get_value(seed, s_maps.get('seed-to-soil map'))
-        fertilizer = get_value(soil, s_maps.get('soil-to-fertilizer map'))
-        water = get_value(fertilizer, s_maps.get('fertilizer-to-water map'))
-        light = get_value(water, s_maps.get('water-to-light map'))
-        temp = get_value(light, s_maps.get('light-to-temperature map'))
-        humidity = get_value(temp, s_maps.get('temperature-to-humidity map'))
-        location = get_value(humidity, s_maps.get('humidity-to-location map'))
-        print(soil, fertilizer, water, light, temp, humidity)
-        print('location', location)
-        if res is None:
-            res = location
-        else:
-            res = min(res, location)
-
-    print('Part 2')
-    i = 0
-    while i < len(seeds):
-        seed_start = seeds[i]
-        seed_range = seeds[i + 1]
-        i = i + 2
-        print('seed=', [seed_start, seed_range])
-        soil = get_value_ranges([[seed_start, seed_range]], s_maps.get('seed-to-soil map'))
-        print('soil=', soil)
-        fertilizer = get_value_ranges(soil, s_maps.get('soil-to-fertilizer map'))
-        print('fertilizer=', fertilizer)
-        water = get_value_ranges(fertilizer, s_maps.get('fertilizer-to-water map'))
-        print('water=', water)
-        light = get_value_ranges(water, s_maps.get('water-to-light map'))
-        print('light=', light)
-        temp = get_value_ranges(light, s_maps.get('light-to-temperature map'))
-        print('temp=', temp)
-        humidity = get_value_ranges(temp, s_maps.get('temperature-to-humidity map'))
-        print('humidity=', humidity)
-        locations = get_value_ranges(humidity, s_maps.get('humidity-to-location map'))
-        print('location', locations)
-        for lr in locations:
-            if res2 is None:
-                res2 = int(lr[0])
+    if not part2:
+        for seed in seeds:
+            soil = get_value(seed, s_maps.get('seed-to-soil map'))
+            fertilizer = get_value(soil, s_maps.get('soil-to-fertilizer map'))
+            water = get_value(fertilizer, s_maps.get('fertilizer-to-water map'))
+            light = get_value(water, s_maps.get('water-to-light map'))
+            temp = get_value(light, s_maps.get('light-to-temperature map'))
+            humidity = get_value(temp, s_maps.get('temperature-to-humidity map'))
+            location = get_value(humidity, s_maps.get('humidity-to-location map'))
+            print(soil, fertilizer, water, light, temp, humidity)
+            print('location', location)
+            if res is None:
+                res = location
             else:
-                res2 = min(res2, int(lr[0]))
+                res = min(res, location)
+    else:
+        print('Part 2')
+        i = 0
+        while i < len(seeds):
+            seed_start = seeds[i]
+            seed_range = seeds[i + 1]
+            i = i + 2
+            print('seed=', [seed_start, seed_range])
+            soil = get_value_ranges([[seed_start, seed_range]], s_maps.get('seed-to-soil map'))
+            print('soil=', soil)
+            fertilizer = get_value_ranges(soil, s_maps.get('soil-to-fertilizer map'))
+            print('fertilizer=', fertilizer)
+            water = get_value_ranges(fertilizer, s_maps.get('fertilizer-to-water map'))
+            print('water=', water)
+            light = get_value_ranges(water, s_maps.get('water-to-light map'))
+            print('light=', light)
+            temp = get_value_ranges(light, s_maps.get('light-to-temperature map'))
+            print('temp=', temp)
+            humidity = get_value_ranges(temp, s_maps.get('temperature-to-humidity map'))
+            print('humidity=', humidity)
+            locations = get_value_ranges(humidity, s_maps.get('humidity-to-location map'))
+            print('location', locations)
+            for lr in locations:
+                if res is None:
+                    res = int(lr[0])
+                else:
+                    res = min(res, int(lr[0]))
 
-    return res, res2
+    return res
 
 
 def get_value_ranges(ranges, values):
@@ -145,6 +145,7 @@ def get_value(input, values):
 
 
 if __name__ == '__main__':
-    assert day5('day5_test.txt') == (35, 46)
-
-    assert day5('day5_input.txt') == (403695602, 0)
+    assert day5('day5_test.txt', False) == 35
+    assert day5('day5_test.txt', True) == 46
+    assert day5('day5_input.txt', False) == 403695602
+    assert day5('day5_input.txt', True) == 0
