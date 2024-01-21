@@ -25,11 +25,11 @@ def solve(lines, part2):
         else:
             numbers = line.strip().split()
             if len(numbers) > 0:
-                print(numbers)
+                #print(numbers)
                 s_maps.get(map_name).append(list(map(int, numbers)))
 
-    print('seeds', seeds)
-    print('maps', s_maps)
+    #print('seeds', seeds)
+    #print('maps', s_maps)
 
     if not part2:
         for seed in seeds:
@@ -80,57 +80,63 @@ def solve(lines, part2):
 
 def get_value_ranges(input_ranges, values):
     valid_ranges = []
-    intersected = []
 
-    min_start = None
     for rg in input_ranges:
+        intersected = []
         start = rg[0]
         incr = rg[1]
         end = start + incr
+        ir = (start, end)
         for row in values:
             source_start = row[1]
             rl = row[2]
             source_end = source_start + rl
-            intersect = range_intersect(range(start, end), range(source_start, source_end))
-            if min_start is None:
-                min_start = start
-            else:
-                min_start = min(min_start, start)
+            rr = (source_start, source_end)
+            intersect = range_intersect(ir, rr)
+
             if intersect is not None:
+                print('Match', rr)
                 intersected.append(intersect)
                 dest_start = row[0]
-                s_offset = intersect.start - source_start
+                s_offset = intersect[0] - source_start
                 ds = dest_start + s_offset
-                r = intersect.stop - intersect.start
-                valid_ranges.append([ds, r])
-                # if start < intersect.start:
-                #     valid_ranges.append([start,intersect.start - start])
-                # if end > intersect.stop:
-                #     valid_ranges.append([intersect.stop+1, end - intersect.stop])
-        # remaining = [(start,end)]
-        # for inter in intersected:
-        #
-        #     x = remaining[0] - inter
+                r = intersect[1] - intersect[0]
+                valid_ranges.append((ds, r))
 
+        print('intersected=', intersected)
+        # find remaining gaps if exist
+        remaining = [(start,end)]
+        for i1 in intersected:
+            new_r = []
+            for a in remaining:
+                diffs = range_diff(a, i1)
+                print(diffs)
+                for d in diffs:
+                    new_r.append((d[0],d[1] - d[0]))
+            remaining = new_r
 
-    if len(valid_ranges) == 0:
-        valid_ranges = input_ranges
-    else:
-        min_inter_s = None
+        valid_ranges.extend(remaining)
 
-        for inter in intersected:
-            if min_inter_s is None:
-                min_inter_s = inter.start
-            else:
-                min_inter_s = min(min_inter_s,inter.start)
-        if min_start < min_inter_s:
-            valid_ranges.append([min_start, min_inter_s - min_start])
-    print('intersected=', intersected)
     return valid_ranges
 
 
 def range_intersect(r1, r2):
-    return (range(max(r1.start,r2.start), min(r1.stop,r2.stop))) or None
+    r = range(max(r1[0],r2[0]), min(r1[1],r2[1])) or None
+    if r is not None:
+        return r.start, r.stop
+    return r
+
+
+def range_diff(r1, r2):
+    s1, e1 = r1
+    s2, e2 = r2
+    endpoints = sorted((s1, s2, e1+1, e2+1))
+    result = []
+    if endpoints[0] == s1 and endpoints[1] != s1:
+        result.append((endpoints[0], endpoints[1] - 1))
+    if endpoints[3] == e1 and endpoints[2] != e1:
+        result.append((endpoints[2], endpoints[3] - 1))
+    return result
 
 
 def get_value(input, values):
@@ -147,6 +153,6 @@ def get_value(input, values):
 
 if __name__ == '__main__':
     #assert day5('day5_test.txt', False) == 35
-    #assert day5('day5_test.txt', True) == 46
+    assert day5('day5_test.txt', True) == 46
     #assert day5('day5_input.txt', False) == 403695602
-    assert day5('day5_input.txt', True) == 0
+    #assert day5('day5_input.txt', True) == 0
