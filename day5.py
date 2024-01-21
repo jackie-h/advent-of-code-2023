@@ -101,6 +101,7 @@ def get_value_ranges(input_ranges, values):
                 s_offset = intersect[0] - source_start
                 ds = dest_start + s_offset
                 r = intersect[1] - intersect[0]
+                print('Matches', (ds, ds + r))
                 valid_ranges.append((ds, r))
 
         print('intersected=', intersected)
@@ -153,6 +154,6 @@ def get_value(input, values):
 
 if __name__ == '__main__':
     #assert day5('day5_test.txt', False) == 35
-    assert day5('day5_test.txt', True) == 46
+    #assert day5('day5_test.txt', True) == 46
     #assert day5('day5_input.txt', False) == 403695602
-    #assert day5('day5_input.txt', True) == 0
+    assert day5('day5_input.txt', True) == 0
